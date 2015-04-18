@@ -1,18 +1,18 @@
 #ifndef __RDRAWABLES_H__
 #define __RDRAWABLES_H__
-#include "../../base/RBase.h"
-#include "RTextures.h"
-#include "RAnim.h"
+#include <base\Base.h>
+#include <view\Textures.h>
+#include <view\Anim.h>
 #include <memory>
 #include <list>
-enum RDrawableType
+enum DrawableType
 {
-	RDRAWBL_POLYMESH = 0 , RDRAWBL_QUAD = 1 , RDRAWBL_BOX = 2
+	DRAWBL_POLYMESH = 0 , DRAWBL_QUAD = 1 , DRAWBL_BOX = 2
 };
-class RSpriteEffect
+class SpriteEffect
 {
 public:
-	enum REffectType
+	enum EffectType
 	{
 		REFFECT_NONE = -1 , REFFECT_GLOW = 0 , REFFECT_FIRE = 1
 	};
@@ -23,18 +23,18 @@ public:
 	bool _dead = false;
 	f3 _v3pos = f3( 0.0f , 0.0f , 0.0f );
 	f3 _v3dir = f3( 0.0f , 0.0f , 0.0f );
-	RSpriteEffect( int type = REFFECT_NONE ) : _type( type ){}
+	SpriteEffect( int type = REFFECT_NONE ) : _type( type ){}
 	inline void update( const float dt )
 	{
 		_time += _speed * dt;
 		if( _time > 1.0f ) _dead = true;
 	}
 };
-class RPolymesh
+class Polymesh
 {
 public:
-	struct RPolyMeshType{
-		static const int RBONED_PMESH = 0  , RSTATIC_PMESH = 1;
+	struct PolyMeshType{
+		static const int BONED_PMESH = 0  , STATIC_PMESH = 1;
 	};
 	int				_flags;
 	int				_type;
@@ -44,9 +44,9 @@ public:
 	uint        _bone_count;
 	std::unique_ptr< char[] > __vertices;
 	std::unique_ptr< unsigned short[] > __indeces;
-	std::unique_ptr< RAnimationset[] > __mat4anim;
+	std::unique_ptr< Animationset[] > __mat4anim;
 	uint _anim_count = 0;
-	std::unique_ptr< RImage[] > _textures;
+	std::unique_ptr< Image[] > _textures;
 	uint _texture_count = 0;
 	void release()
 	{

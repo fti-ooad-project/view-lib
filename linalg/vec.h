@@ -327,7 +327,7 @@ typedef vec< 2 , unsigned int > u2;
 typedef vec< 3 , float > f3;
 typedef vec< 4 , float > f4;
 typedef vec< 3 , int > i3;
-class RVectorFactory
+/*class VectorFactory
 {
 private:
 	static std::random_device dev;
@@ -338,5 +338,5 @@ public:
 	static f3 getRandomSphere();
 	static f2 getRandomCircle();
 	static f3 getReflected( f3 const &v , f3 const &n );
-};
+};*/
 #endif // VEC_H

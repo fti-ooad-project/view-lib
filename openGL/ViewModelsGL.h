@@ -1,7 +1,7 @@
 #ifndef __ROPENGLINTFC_H__
 #define __ROPENGLINTFC_H__
 //#include "RLinAlg.hpp"
-#include "ShaderSpecs.h"
+#include <view/ShaderSpecs.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string>

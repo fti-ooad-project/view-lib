@@ -1,6 +1,6 @@
 #ifndef SHADERSPECS_H
 #define SHADERSPECS_H
-#include "../../base/RBase.h"
+#include <base\Base.h>
 struct RShaderInTypes
 {
 	static const int vec1 = 0 , vec2 = 1 , vec3 = 2 , ivec1 = 3 , mat4 = 4 , tex = 5 , cubemap = 6 , vec4 = 7 , none = -1;
@@ -8,12 +8,12 @@ struct RShaderInTypes
 class ShaderMask
 {
 public:
-	static constexpr int MASK_TEXTURED	= 1 << 0;
-	static constexpr int MASK_TEXTURED_DIF	= 1 << 1;
-	static constexpr int MASK_TEXTURED_NOR 	= 1 << 2;
-	static constexpr int MASK_TEXTURED_SPE	= 1 << 3;
-	static constexpr int MASK_ANIMATED	= 1 << 4;
-	static constexpr int MASK_OWN_ANIMATED	= 1 << 5;
+	static const int MASK_TEXTURED	= 1 << 0;
+	static const int MASK_TEXTURED_DIF	= 1 << 1;
+	static const int MASK_TEXTURED_NOR 	= 1 << 2;
+	static const int MASK_TEXTURED_SPE	= 1 << 3;
+	static const int MASK_ANIMATED	= 1 << 4;
+	static const int MASK_OWN_ANIMATED	= 1 << 5;
 };
 struct RTuple
 {

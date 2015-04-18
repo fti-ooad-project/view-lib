@@ -1,10 +1,10 @@
-#include <openGL\GL.h>
+#include <openGL\GLincludes.h>
 #include <openGL\AnimGL.h>
-uint RBoneAnimInTexHolderGL::getCount() const
+uint BoneAnimInTexHolderGL::getCount() const
 {
 	return _count;
 }
-void RBoneAnimInTexHolderGL::operator=( RBoneAnimInTexHolderGL &&a )
+void BoneAnimInTexHolderGL::operator=( BoneAnimInTexHolderGL &&a )
 {
 	release();
 	_count = a._count;
@@ -25,11 +25,11 @@ void RBoneAnimInTexHolderGL::operator=( RBoneAnimInTexHolderGL &&a )
 	}
 	a.release();
 }
-RBoneAnimInTexHolderGL::RBoneAnimInTexHolderGL( RBoneAnimInTexHolderGL &&a )
+BoneAnimInTexHolderGL::BoneAnimInTexHolderGL( BoneAnimInTexHolderGL &&a )
 {
 	*this = std::move( a );
 }
-RBoneAnimInTexHolderGL::RBoneAnimInTexHolderGL( std::unique_ptr< RAnimationset[] > &&sets , int count )
+BoneAnimInTexHolderGL::BoneAnimInTexHolderGL( std::unique_ptr< Animationset[] > &&sets , int count )
 {
 	_count = count;
 	__sets = std::move( sets );
@@ -37,12 +37,12 @@ RBoneAnimInTexHolderGL::RBoneAnimInTexHolderGL( std::unique_ptr< RAnimationset[]
 	_bone_count = __sets[ 0 ]._bone_count;
 	//__texture_pointer_array = std::move( std::unique_ptr< uint[] >( new uint[ _count ] ) );
 }
-void RBoneAnimInTexHolderGL::init( std::unique_ptr< RAnimationset[] > &&sets , int count )
+void BoneAnimInTexHolderGL::init( std::unique_ptr< Animationset[] > &&sets , int count )
 {
-	*this = std::move( RBoneAnimInTexHolderGL( std::move( sets ) , count ) );
+	*this = std::move( BoneAnimInTexHolderGL( std::move( sets ) , count ) );
 	init();
 }
-void RBoneAnimInTexHolderGL::init()
+void BoneAnimInTexHolderGL::init()
 {
 	if( isInited() || _count == 0 ) return;
 	setInited( true );
@@ -71,7 +71,7 @@ void RBoneAnimInTexHolderGL::init()
 	glTexParameteri( GL_TEXTURE_2D_ARRAY , GL_TEXTURE_WRAP_T , GL_REPEAT );
 	this->__sets.reset();
 }
-void RBoneAnimInTexHolderGL::release()
+void BoneAnimInTexHolderGL::release()
 {
 	if( !isInited() ) return;
 	setInited( false );
@@ -80,7 +80,7 @@ void RBoneAnimInTexHolderGL::release()
 	//__frame_count.reset();
 	//__texture_pointer_array.reset();
 }
-ViewTypes::RDrawBufferPTR RBoneAnimInTexHolderGL::getBufferPtr() const
+uint BoneAnimInTexHolderGL::getBufferPtr() const
 {
 	return _texture_array_pointer;// __texture_pointer_array[ i ];
 }

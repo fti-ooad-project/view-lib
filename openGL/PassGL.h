@@ -20,4 +20,22 @@ public:
 	void release() override;
 	void update(const Size &);
 };
+class UnpackBufferGL :public Initable
+{
+private:
+	uint _buffer_id;
+	uint _texture_id;
+	//std::unique_ptr< char[] > _buffer_data;
+	int _gl_type;
+	int _gl_store;
+	int _gl_format;
+	Size _size;
+public:
+	void init( const Size & , uint , int );
+	uint getBufferPtr() const;
+	void unpack();
+	void bind( uint , uint ) const;
+	void release() override;
+	void update( const Size & );
+};
 #endif // RPASSGL_H

@@ -1,4 +1,4 @@
-#include "../linalg/mat.h"
+#include <linalg\mat.h>
 f3x3 rotation(const f3 &nax, float ang)
 {
 	float sa = sin(ang), ca = cos(ang);

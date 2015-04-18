@@ -1,5 +1,5 @@
 #include <openGL\ViewModelsGL.h>
-#include <openGL\GL.h>
+#include <openGL\GLincludes.h>
 void GraphicProgrammGL::init( std::string frag_file , std::string vert_file , std::string geom_file , std::string tess_file , std::string tessest_file )
 {
 #ifdef RLOG
@@ -10,7 +10,7 @@ void GraphicProgrammGL::init( std::string frag_file , std::string vert_file , st
 		auto proc = [ ]( uint type , std::string const &raw )
 		{
 			int out = glCreateShader( type );
-			std::string src = RFileParser::genParsed( raw );
+			std::string src = FileParser::genParsed( raw );
 			GLint l = src.length();
 			char const *temp = src.c_str();
 			glShaderSource( out , 1 , &temp , &l );

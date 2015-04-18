@@ -1,4 +1,4 @@
-#include "../linalg/vec.h"
+#include <linalg\vec.h>
 /*inline float wrap(float x, float min, float max)
 {
 	if (x > max) return max;
@@ -306,11 +306,11 @@ vec< N, T > wrap(vec< N, T > const &v, float min, float max)
 {
 	return v.g_norm() * wrap(v.g_mod(), min, max);
 }*/
-float RVectorFactory::getRandom()
+/*float VectorFactory::getRandom()
 {
 	return static_cast<float>(dev()) / std::random_device::max();
 }
-f3 RVectorFactory::getRandomHalfSphere()
+f3 VectorFactory::getRandomHalfSphere()
 {
 	float phi = getRandom() * PI * 2.0f;
 	float cp = cosf(phi);
@@ -319,7 +319,7 @@ f3 RVectorFactory::getRandomHalfSphere()
 	float st = sqrtf(1.0f - ct * ct);
 	return f3(st * cp, st * sp, ct);
 }
-f3 RVectorFactory::getRandomSphere()
+f3 VectorFactory::getRandomSphere()
 {
 	float phi = getRandom() * PI * 2.0f;
 	float theta = PI * 0.5f + asinf(2.0f * getRandom() - 1.0f);
@@ -331,15 +331,15 @@ f3 RVectorFactory::getRandomSphere()
 		sinf(theta);
 	return f3(st * cp, st * sp, ct);
 }
-f2 RVectorFactory::getRandomCircle()
+f2 VectorFactory::getRandomCircle()
 {
 	float phi = getRandom() * PI * 2.0f;
 	float r = powf(getRandom(), 0.5f);
 	return f2(cos(phi), sin(phi)) * r;
 }
-f3 RVectorFactory::getReflected(f3 const &v, f3 const &n)
+f3 VectorFactory::getReflected(f3 const &v, f3 const &n)
 {
 	return v - 2.0f * n * (n * v);
 }
-std::random_device RVectorFactory::dev;
-const float RVectorFactory::PI = cosf( -1.0f );
+std::random_device VectorFactory::dev;
+const float VectorFactory::PI = cosf( -1.0f );*/

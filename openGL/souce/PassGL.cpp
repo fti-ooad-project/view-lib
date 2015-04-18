@@ -1,5 +1,5 @@
 #include <openGL\PassGL.h>
-#include <openGL\GL.h>
+#include <openGL\GLincludes.h>
 void DrawPassGL::init( const PassDesc &desc )
 {
 	if( isInited() ) return;
@@ -14,115 +14,115 @@ void DrawPassGL::init( const PassDesc &desc )
 	int _gl_format;
 	switch( desc._store_type )
 	{
-		case BufferStoreType::BUFFER_BYTE:
+	case BufferStoreType::BUFFER_BYTE:
+	{
+		switch( desc._component_number )
 		{
-			switch( desc._component_number )
-			{
-				case 1:
-				{
-					_gl_type = GL_R8;
-					_gl_format = GL_R;
-					_gl_store = GL_UNSIGNED_BYTE;
-				}
-				break;
-				case 2:
-				{
-					_gl_type = GL_RG8;
-					_gl_format = GL_RG;
-					_gl_store = GL_UNSIGNED_BYTE;
-				}
-				break;
-				case 3:
-				{
-					_gl_type = GL_RGB8;
-					_gl_format = GL_RGB;
-					_gl_store = GL_UNSIGNED_BYTE;
-				}
-				break;
-				case 4:
-				{
-					_gl_type = GL_RGBA8;
-					_gl_format = GL_RGBA;
-					_gl_store = GL_UNSIGNED_BYTE;
-				}
-				break;
-			}
-			_gl_depth = GL_DEPTH_COMPONENT16;
+		case 1:
+		{
+			_gl_type = GL_R8;
+			_gl_format = GL_R;
+			_gl_store = GL_UNSIGNED_BYTE;
 		}
 		break;
-		case BufferStoreType::BUFFER_FLOAT:
+		case 2:
 		{
-			switch( desc._component_number )
-			{
-				case 1:
-				{
-					_gl_format = GL_R;
-					_gl_type = GL_R32F;
-					_gl_store = GL_FLOAT;
-				}
-				break;
-				case 2:
-				{
-					_gl_format = GL_RG;
-					_gl_type = GL_RG32F;
-					_gl_store = GL_FLOAT;
-				}
-				break;
-				case 3:
-				{
-					_gl_format = GL_RGB;
-					_gl_type = GL_RGB32F;
-					_gl_store = GL_FLOAT;
-				}
-				break;
-				case 4:
-				{
-					_gl_format = GL_RGBA;
-					_gl_type = GL_RGBA32F;
-					_gl_store = GL_FLOAT;
-				}
-				break;
-			}
-			_gl_depth = GL_DEPTH_COMPONENT32F;
+			_gl_type = GL_RG8;
+			_gl_format = GL_RG;
+			_gl_store = GL_UNSIGNED_BYTE;
+		}
+		break;
+		case 3:
+		{
+			_gl_type = GL_RGB8;
+			_gl_format = GL_RGB;
+			_gl_store = GL_UNSIGNED_BYTE;
+		}
+		break;
+		case 4:
+		{
+			_gl_type = GL_RGBA8;
+			_gl_format = GL_RGBA;
+			_gl_store = GL_UNSIGNED_BYTE;
+		}
+		break;
+		}
+		_gl_depth = GL_DEPTH_COMPONENT16;
+	}
+	break;
+	case BufferStoreType::BUFFER_FLOAT:
+	{
+		switch( desc._component_number )
+		{
+		case 1:
+		{
+			_gl_format = GL_R;
+			_gl_type = GL_R32F;
+			_gl_store = GL_FLOAT;
+		}
+		break;
+		case 2:
+		{
+			_gl_format = GL_RG;
+			_gl_type = GL_RG32F;
+			_gl_store = GL_FLOAT;
+		}
+		break;
+		case 3:
+		{
+			_gl_format = GL_RGB;
+			_gl_type = GL_RGB32F;
+			_gl_store = GL_FLOAT;
+		}
+		break;
+		case 4:
+		{
+			_gl_format = GL_RGBA;
+			_gl_type = GL_RGBA32F;
+			_gl_store = GL_FLOAT;
+		}
+		break;
+		}
+		_gl_depth = GL_DEPTH_COMPONENT32F;
 
-		}
-		break;
-		case BufferStoreType::BUFFER_INT:
+	}
+	break;
+	case BufferStoreType::BUFFER_INT:
+	{
+		switch( desc._component_number )
 		{
-			switch( desc._component_number )
-			{
-				case 1:
-				{
-					_gl_type = GL_R32UI;
-					_gl_store = GL_UNSIGNED_INT;
-					_gl_format = GL_RED_INTEGER;
-				}
-				break;
-				case 2:
-				{
-					_gl_type = GL_RG32UI;
-					_gl_store = GL_UNSIGNED_INT;
-					_gl_format = GL_RG_INTEGER;
-				}
-				break;
-				case 3:
-				{
-					_gl_type = GL_RGB32UI;
-					_gl_store = GL_UNSIGNED_INT;
-					_gl_format = GL_RGB_INTEGER;
-				}
-				break;
-				case 4:
-				{
-					_gl_type = GL_RGBA32UI;
-					_gl_store = GL_UNSIGNED_INT;
-					_gl_format = GL_RGBA_INTEGER;
-				}
-				break;
-			}
-			_gl_depth = GL_DEPTH_COMPONENT32F;
+		case 1:
+		{
+			_gl_type = GL_R32UI;
+			_gl_store = GL_UNSIGNED_INT;
+			_gl_format = GL_RED_INTEGER;
 		}
 		break;
+		case 2:
+		{
+			_gl_type = GL_RG32UI;
+			_gl_store = GL_UNSIGNED_INT;
+			_gl_format = GL_RG_INTEGER;
+		}
+		break;
+		case 3:
+		{
+			_gl_type = GL_RGB32UI;
+			_gl_store = GL_UNSIGNED_INT;
+			_gl_format = GL_RGB_INTEGER;
+		}
+		break;
+		case 4:
+		{
+			_gl_type = GL_RGBA32UI;
+			_gl_store = GL_UNSIGNED_INT;
+			_gl_format = GL_RGBA_INTEGER;
+		}
+		break;
+		}
+		_gl_depth = GL_DEPTH_COMPONENT32F;
+	}
+	break;
 	}
 	if( N > 0 )
 	{
@@ -183,7 +183,7 @@ void DrawPassGL::init( const PassDesc &desc )
 				for( int i = 0; i < 6; i++ )
 				{
 					glTexImage2D( GL_TEXTURE_CUBE_MAP_POSITIVE_X + i , 0 , GL_DEPTH_COMPONENT32F ,
-								  _desc._size._w , _desc._size._h , 0 , GL_DEPTH_COMPONENT , GL_FLOAT , 0 );
+						_desc._size._w , _desc._size._h , 0 , GL_DEPTH_COMPONENT , GL_FLOAT , 0 );
 				}
 				glFramebufferTexture( GL_FRAMEBUFFER , GL_DEPTH_ATTACHMENT , _depth_buffer_pointer , 0 );
 			} else
@@ -204,7 +204,7 @@ void DrawPassGL::init( const PassDesc &desc )
 				glTexParameteri( GL_TEXTURE_2D , GL_TEXTURE_WRAP_S , GL_CLAMP_TO_EDGE );
 				glTexParameteri( GL_TEXTURE_2D , GL_TEXTURE_WRAP_T , GL_CLAMP_TO_EDGE );
 				glTexImage2D( GL_TEXTURE_2D , 0 , GL_DEPTH_COMPONENT32F ,
-							  _desc._size._w , _desc._size._h , 0 , GL_DEPTH_COMPONENT , GL_FLOAT , 0 );
+					_desc._size._w , _desc._size._h , 0 , GL_DEPTH_COMPONENT , GL_FLOAT , 0 );
 				glFramebufferTexture( GL_FRAMEBUFFER , GL_DEPTH_ATTACHMENT , _depth_buffer_pointer , 0 );
 			} else
 			{
@@ -259,6 +259,8 @@ void DrawPassGL::release()
 		glDeleteTextures( 1 , &_depth_buffer_pointer );
 	else
 		glDeleteRenderbuffers( 1 , &_depth_buffer_pointer );
+	glDeleteRenderbuffers( 1 , &_framebuffer_id );
+	glDeleteBuffers( 1 , &_framebuffer_id );
 	__texture_pointer_array.reset();
 }
 void DrawPassGL::update( const Size &size )
@@ -268,4 +270,174 @@ void DrawPassGL::update( const Size &size )
 	_desc._size = size;
 	release();
 	init( _desc );
+}
+void UnpackBufferGL::init( const Size &size , uint component_count , int storage )
+{
+	if( isInited() ) return;
+	setInited( true );
+	int bbp = 0;
+	switch( storage )
+	{
+	case BufferStoreType::BUFFER_BYTE:
+	{
+		switch( component_count )
+		{
+		case 1:
+		{
+			_gl_type = GL_R8;
+			_gl_format = GL_R;
+			_gl_store = GL_UNSIGNED_BYTE;
+			bbp = 1;
+		}
+		break;
+		case 2:
+		{
+			_gl_type = GL_RG8;
+			_gl_format = GL_RG;
+			_gl_store = GL_UNSIGNED_BYTE;
+			bbp = 2;
+		}
+		break;
+		case 3:
+		{
+			_gl_type = GL_RGB8;
+			_gl_format = GL_RGB;
+			_gl_store = GL_UNSIGNED_BYTE;
+			bbp = 3;
+		}
+		break;
+		case 4:
+		{
+			_gl_type = GL_RGBA8;
+			_gl_format = GL_RGBA;
+			_gl_store = GL_UNSIGNED_BYTE;
+			bbp = 4;
+		}
+		break;
+		}
+	}
+	break;
+	case BufferStoreType::BUFFER_FLOAT:
+	{
+		switch( component_count )
+		{
+		case 1:
+		{
+			_gl_format = GL_R;
+			_gl_type = GL_R32F;
+			_gl_store = GL_FLOAT;
+			bbp = 4;
+		}
+		break;
+		case 2:
+		{
+			_gl_format = GL_RG;
+			_gl_type = GL_RG32F;
+			_gl_store = GL_FLOAT;
+			bbp = 8;
+		}
+		break;
+		case 3:
+		{
+			_gl_format = GL_RGB;
+			_gl_type = GL_RGB32F;
+			_gl_store = GL_FLOAT;
+			bbp = 12;
+		}
+		break;
+		case 4:
+		{
+			_gl_format = GL_RGBA;
+			_gl_type = GL_RGBA32F;
+			_gl_store = GL_FLOAT;
+			bbp = 16;
+		}
+		break;
+		}
+	}
+	break;
+	case BufferStoreType::BUFFER_INT:
+	{
+		switch( component_count )
+		{
+		case 1:
+		{
+			_gl_type = GL_R32UI;
+			_gl_store = GL_UNSIGNED_INT;
+			_gl_format = GL_RED_INTEGER;
+			bbp = 4;
+		}
+		break;
+		case 2:
+		{
+			_gl_type = GL_RG32UI;
+			_gl_store = GL_UNSIGNED_INT;
+			_gl_format = GL_RG_INTEGER;
+			bbp = 8;
+		}
+		break;
+		case 3:
+		{
+			_gl_type = GL_RGB32UI;
+			_gl_store = GL_UNSIGNED_INT;
+			_gl_format = GL_RGB_INTEGER;
+			bbp = 12;
+		}
+		break;
+		case 4:
+		{
+			_gl_type = GL_RGBA32UI;
+			_gl_store = GL_UNSIGNED_INT;
+			_gl_format = GL_RGBA_INTEGER;
+			bbp = 16;
+		}
+		break;
+		}
+	}
+	break;
+	}
+	glGenBuffers( 1 , &_buffer_id );
+	glBindBuffer( GL_ARRAY_BUFFER , _buffer_id );
+	glBufferData( GL_ARRAY_BUFFER , size._w * size._h * bbp , nullptr , GL_DYNAMIC_DRAW );
+	glBindBuffer( GL_ARRAY_BUFFER , 0 );
+	glEnable( GL_TEXTURE_2D );
+	glGenTextures( 1 , &_texture_id );
+	glBindTexture( GL_TEXTURE_2D , _texture_id );
+	glTexParameteri( GL_TEXTURE_2D , GL_TEXTURE_WRAP_S , GL_CLAMP );
+	glTexParameteri( GL_TEXTURE_2D , GL_TEXTURE_WRAP_T , GL_CLAMP );
+	glTexParameteri( GL_TEXTURE_2D , GL_TEXTURE_MAG_FILTER , GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_2D , GL_TEXTURE_MIN_FILTER , GL_NEAREST );
+	glTexImage2D( GL_TEXTURE_2D , 0 , _gl_type , size._w , size._h , 0 , _gl_format , _gl_store , nullptr );
+	glBindTexture( GL_TEXTURE_2D , 0 );
+	_size = size;
+}
+uint UnpackBufferGL::getBufferPtr() const
+{
+	return _buffer_id;
+}
+void UnpackBufferGL::bind( uint loc , uint tc ) const
+{
+	glActiveTexture( GL_TEXTURE0 + tc );
+	glBindTexture( GL_TEXTURE_2D , _texture_id );
+	glUniform1i( loc , tc );
+}
+void UnpackBufferGL::unpack()
+{
+	glPixelStorei( GL_UNPACK_ALIGNMENT , 1 );
+	glBindBuffer( GL_PIXEL_UNPACK_BUFFER_ARB , _buffer_id );
+	glBindTexture( GL_TEXTURE_2D , _texture_id );
+	glTexSubImage2D( GL_TEXTURE_2D , 0 , 0 , 0 , _size._w , _size._h , _gl_format , _gl_store , 0 );
+	glBindBuffer( GL_PIXEL_PACK_BUFFER_ARB , 0 );
+	glBindBuffer( GL_PIXEL_UNPACK_BUFFER_ARB , 0 );
+}
+void UnpackBufferGL::release()
+{
+	if( !isInited() ) return;
+	setInited( false );
+	glDeleteTextures( 1 , &_texture_id );
+	glDeleteBuffers( 1 , &_buffer_id );
+}
+void UnpackBufferGL::update( const Size & )
+{
+
 }

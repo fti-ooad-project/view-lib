@@ -33,6 +33,6 @@ void Image::release()
 {
 	__data.reset();
 }
-RImage::~Image()
+Image::~Image()
 {
 }

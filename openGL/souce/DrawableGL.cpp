@@ -1,4 +1,5 @@
 #include <openGL\DrawableGL.h>
+#include <openGL\GLincludes.h>
 bool PolyMeshGL::isInstanced() const
 {
 	return bool( _instanced_buf );
@@ -96,17 +97,17 @@ void ComplexPolyMeshGL::operator=( ComplexPolyMeshGL &&mesh )
 		_size = __mesh->_v3size * 2.0f;
 	}
 }
-ComplexPolyMeshGL::ComplexPolyMeshGL( std::unique_ptr< RPolymesh > &&mesh )
+ComplexPolyMeshGL::ComplexPolyMeshGL( std::unique_ptr< Polymesh > &&mesh )
 {
 	__mesh = std::move( mesh );
 	if( __mesh->_texture_count > 0 )
-		__textures = std::move( RTextureHolderGL( std::move( __mesh->_textures ) , __mesh->_texture_count ) );
+		__textures = std::move( TextureHolderGL( std::move( __mesh->_textures ) , __mesh->_texture_count ) );
 	if( __mesh->_anim_count > 0 )
-		__anim_intex = std::move( RBoneAnimInTexHolderGL( std::move( __mesh->__mat4anim ) , __mesh->_anim_count ) );
+		__anim_intex = std::move( BoneAnimInTexHolderGL( std::move( __mesh->__mat4anim ) , __mesh->_anim_count ) );
 	_bone_count = __mesh->_bone_count;
 	_size = __mesh->_v3size * 2.0f;
 }
-void ComplexPolyMeshGL::init( std::unique_ptr< RPolymesh > &&mesh )
+void ComplexPolyMeshGL::init( std::unique_ptr< Polymesh > &&mesh )
 {
 	*this = std::move( ComplexPolyMeshGL( std::move( mesh ) ) );
 	init();
@@ -124,7 +125,7 @@ void ComplexPolyMeshGL::init()
 	glBindBuffer( GL_ARRAY_BUFFER_ARB , vbo );
 	switch( __mesh->_type )
 	{
-		case RPolymesh::RPolyMeshType::RBONED_PMESH:
+		case Polymesh::PolyMeshType::BONED_PMESH:
 		{
 			glBufferData( GL_ARRAY_BUFFER_ARB ,
 						  __mesh->_vertex_count * RVertexOffsets::Base , __mesh->__vertices.get() ,
@@ -146,7 +147,7 @@ void ComplexPolyMeshGL::init()
 			__anim_intex.init();
 		}
 		break;
-		case RPolymesh::RPolyMeshType::RSTATIC_PMESH:
+		case Polymesh::PolyMeshType::STATIC_PMESH:
 		{
 			glBufferData( GL_ARRAY_BUFFER_ARB ,
 						  __mesh->_vertex_count * RStaticVertexOffsets::Base , __mesh->__vertices.get() ,
@@ -233,14 +234,14 @@ void ComplexPolyMeshGL::bindRes( InstanceInfo const &stat ) const
 }
 void PolyQuadGL::init()
 {
-	static constexpr float quad[] =
+	static const float quad[] =
 	{
 		-1.0f , -1.0f , 0.0f , 0.0f , 1.0f , 0.0f , 0.0f , 1.0f , /*bn*/1.0f , 0.0f , 0.0f , /*tn*/0.0f , 1.0f , 0.0f ,
 		1.0f , -1.0f , 0.0f , 1.0f , 1.0f , 0.0f , 0.0f , 1.0f , /*bn*/1.0f , 0.0f , 0.0f , /*tn*/0.0f , 1.0f , 0.0f ,
 		1.0f , 1.0f , 0.0f , 1.0f , 0.0f , 0.0f , 0.0f , 1.0f , /*bn*/1.0f , 0.0f , 0.0f , /*tn*/0.0f , 1.0f , 0.0f ,
 		-1.0f , 1.0f , 0.0f , 0.0f , 0.0f , 0.0f , 0.0f , 1.0f , /*bn*/1.0f , 0.0f , 0.0f , /*tn*/0.0f , 1.0f , 0.0f
 	};
-	static constexpr ushort indx[] =
+	static const ushort indx[] =
 	{
 		0 , 1 , 2 , 0 , 2 , 3
 	};
@@ -278,7 +279,7 @@ void PolyQuadGL::bindRes( InstanceInfo const &stat ) const
 }
 void PolyBoxGL::init()
 {
-	static constexpr float quad[] =
+	static const float quad[] =
 	{
 		-1.0f , -1.0f , 1.0f , 0.0f , 0.0f , -0.6f , -0.6f , 0.6f ,
 		1.0f , -1.0f , 1.0f , 1.0f , 0.0f , 0.6f , -0.6f , 0.6f ,
@@ -289,7 +290,7 @@ void PolyBoxGL::init()
 		1.0f , 1.0f , -1.0f , 1.0f , 1.0f , 0.6f , 0.6f , -0.6f ,
 		-1.0f , 1.0f , -1.0f , 0.0f , 1.0f , -0.6f , 0.6f , -0.6f ///
 	};
-	static constexpr ushort indx[] =
+	static const ushort indx[] =
 	{
 		0 , 2 , 3 , 0 , 1 , 2 ,
 		4 , 7 , 6 , 4 , 6 , 5 ,

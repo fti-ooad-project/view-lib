@@ -1,25 +1,26 @@
 #ifndef RTEXTURESGL_H
 #define RTEXTURESGL_H
-#include "RTextures.h"
+#include <view\Textures.h>
 #include <algorithm>
-class RTextureHolderGL : public RInitable
+class TextureHolderGL : public Initable
 {
 private:
-	std::unique_ptr< RImage[] > _imgs;
+	std::unique_ptr< Image[] > _imgs;
 	uint _count = 0;
 	//std::unique_ptr< uint[] > __texture_pointer_array;
 	uint _texture_array_pointer;
 public:
 	uint getCount() const;
 	uint getTexture() const;
-	RTextureHolderGL( RTextureHolderGL && );
-	void operator=( RTextureHolderGL && );
-	RTextureHolderGL() = default;
-	RTextureHolderGL( std::unique_ptr< RImage[] > && , int );
-	void init( std::unique_ptr< RImage[] > && , int );
+	TextureHolderGL( TextureHolderGL && );
+	void operator=( TextureHolderGL && );
+	TextureHolderGL() = default;
+	TextureHolderGL( std::unique_ptr< Image[] > && , int );
+	void init( std::unique_ptr< Image[] > && , int );
+	void init( uint , uint , int , uint );
 	void init();
 	void setRepeat( bool );
-	~RTextureHolderGL();
+	~TextureHolderGL();
 	void release();
 };
 #endif // RTEXTURESGL_H

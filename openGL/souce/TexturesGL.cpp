@@ -1,18 +1,19 @@
-#include "../view/3dgl/RTexturesGL.h"
-#include "../view/GL.h"
-uint RTextureHolderGL::getCount() const
+#include <openGL\TexturesGL.h>
+#include <openGL\GLincludes.h>
+#include <view\PassDesc.h>
+uint TextureHolderGL::getCount() const
 {
 	return _count;
 }
-uint RTextureHolderGL::getTexture() const
+uint TextureHolderGL::getTexture() const
 {
 	return _texture_array_pointer;// __texture_pointer_array[ i ];
 }
-RTextureHolderGL::RTextureHolderGL( RTextureHolderGL &&a )
+TextureHolderGL::TextureHolderGL( TextureHolderGL &&a )
 {
 	*this = std::move( a );
 }
-void RTextureHolderGL::operator=( RTextureHolderGL &&a )
+void TextureHolderGL::operator=( TextureHolderGL &&a )
 {
 	release();
 	_count = a._count;
@@ -30,18 +31,18 @@ void RTextureHolderGL::operator=( RTextureHolderGL &&a )
 	}
 	a.release();
 }
-RTextureHolderGL::RTextureHolderGL( std::unique_ptr< RImage[] > &&imgs , int count )
+TextureHolderGL::TextureHolderGL( std::unique_ptr< Image[] > &&imgs , int count )
 {
 	_count = count;
 	_imgs = std::move( imgs );
 	//__texture_pointer_array = std::move( std::unique_ptr< uint[] >( new uint[ _count ] ) );
 }
-void RTextureHolderGL::init( std::unique_ptr< RImage[] > &&imgs , int count )
+void TextureHolderGL::init( std::unique_ptr< Image[] > &&imgs , int count )
 {
-	*this = std::move( RTextureHolderGL( std::move( imgs ) , 1 ) );
+	*this = std::move( TextureHolderGL( std::move( imgs ) , 1 ) );
 	init();
 }
-void RTextureHolderGL::init()
+void TextureHolderGL::init()
 {
 	if( !_imgs ) return;
 	if( isInited() || !_count ) return;
@@ -100,7 +101,147 @@ void RTextureHolderGL::init()
 	}
 	_imgs.reset();
 }
-void RTextureHolderGL::setRepeat( bool ref )
+void TextureHolderGL::init( uint width , uint height , int type , uint bbp )
+{
+	if( isInited() ) return;
+	setInited( true );
+	_count = 1;
+	auto pow2 = []( int n )
+	{
+		int out = 1;
+		ito( 32 )
+		{
+			if( n & ( 1 << i ) )
+				out = i;
+		}
+		return out;
+	};
+	int _gl_type;
+	int _gl_store;
+	int _gl_format;
+	switch( type )
+	{
+	case BufferStoreType::BUFFER_BYTE:
+	{
+		switch( bbp )
+		{
+		case 1:
+		{
+			_gl_type = GL_R8;
+			_gl_format = GL_R;
+			_gl_store = GL_UNSIGNED_BYTE;
+		}
+		break;
+		case 2:
+		{
+			_gl_type = GL_RG8;
+			_gl_format = GL_RG;
+			_gl_store = GL_UNSIGNED_BYTE;
+		}
+		break;
+		case 3:
+		{
+			_gl_type = GL_RGB8;
+			_gl_format = GL_RGB;
+			_gl_store = GL_UNSIGNED_BYTE;
+		}
+		break;
+		case 4:
+		{
+			_gl_type = GL_RGBA8;
+			_gl_format = GL_RGBA;
+			_gl_store = GL_UNSIGNED_BYTE;
+		}
+		break;
+		}
+	}
+	break;
+	case BufferStoreType::BUFFER_FLOAT:
+	{
+		switch( bbp )
+		{
+		case 1:
+		{
+			_gl_format = GL_R;
+			_gl_type = GL_R32F;
+			_gl_store = GL_FLOAT;
+		}
+		break;
+		case 2:
+		{
+			_gl_format = GL_RG;
+			_gl_type = GL_RG32F;
+			_gl_store = GL_FLOAT;
+		}
+		break;
+		case 3:
+		{
+			_gl_format = GL_RGB;
+			_gl_type = GL_RGB32F;
+			_gl_store = GL_FLOAT;
+		}
+		break;
+		case 4:
+		{
+			_gl_format = GL_RGBA;
+			_gl_type = GL_RGBA32F;
+			_gl_store = GL_FLOAT;
+		}
+		break;
+		}
+	}
+	break;
+	case BufferStoreType::BUFFER_INT:
+	{
+		switch( bbp )
+		{
+		case 1:
+		{
+			_gl_type = GL_R32UI;
+			_gl_store = GL_UNSIGNED_INT;
+			_gl_format = GL_RED_INTEGER;
+		}
+		break;
+		case 2:
+		{
+			_gl_type = GL_RG32UI;
+			_gl_store = GL_UNSIGNED_INT;
+			_gl_format = GL_RG_INTEGER;
+		}
+		break;
+		case 3:
+		{
+			_gl_type = GL_RGB32UI;
+			_gl_store = GL_UNSIGNED_INT;
+			_gl_format = GL_RGB_INTEGER;
+		}
+		break;
+		case 4:
+		{
+			_gl_type = GL_RGBA32UI;
+			_gl_store = GL_UNSIGNED_INT;
+			_gl_format = GL_RGBA_INTEGER;
+		}
+		break;
+		}
+	}
+	break;
+	}
+	const int mipmaplevels = 1;// std::min( 10 , pow2( std::min( width , height ) ) );
+	glGenTextures( 1 , &_texture_array_pointer );
+	glBindTexture( GL_TEXTURE_2D , _texture_array_pointer );
+	//glTexStorage2D( GL_TEXTURE_2D , mipmaplevels , _gl_type , width , height );
+	//glTexSubImage2D( GL_TEXTURE_2D , 0 , 0 , 0 , width , height , _gl_format , _gl_store , NULL );
+	glTexImage2D( GL_TEXTURE_2D , 0 , _gl_type , width , height , 0 , _gl_format , _gl_store , nullptr );
+	//glTexImage2D( GL_TEXTURE_2D , 0 , GL_RGBA32F , width , height , 0 , GL_RGBA , GL_FLOAT , nullptr );
+	//glGenerateMipmap( GL_TEXTURE_2D );
+	glTexParameteri( GL_TEXTURE_2D , GL_TEXTURE_MAG_FILTER , GL_LINEAR );
+	glTexParameteri( GL_TEXTURE_2D , GL_TEXTURE_MIN_FILTER , GL_LINEAR_MIPMAP_LINEAR );
+	glTexParameteri( GL_TEXTURE_2D , GL_TEXTURE_WRAP_S , GL_REPEAT );
+	glTexParameteri( GL_TEXTURE_2D , GL_TEXTURE_WRAP_T , GL_REPEAT );
+	glBindTexture( GL_TEXTURE_2D , 0 );
+}
+void TextureHolderGL::setRepeat( bool ref )
 {
 	if( ref )
 	{
@@ -130,11 +271,11 @@ void RTextureHolderGL::setRepeat( bool ref )
 		}
 	}
 }
-RTextureHolderGL::~RTextureHolderGL()
+TextureHolderGL::~TextureHolderGL()
 {
 	release();
 }
-void RTextureHolderGL::release()
+void TextureHolderGL::release()
 {
 	if( !isInited() ) return;
 	setInited( false );

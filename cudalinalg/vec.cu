@@ -1,4 +1,4 @@
-#include "linalg/vec.h"
+#include <cudalinalg/vec.h>
 #include<curand_kernel.h>
 DEVICE float PI;
 //#define RAND_COUNT 0x1000

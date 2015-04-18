@@ -1,9 +1,9 @@
 #ifndef __RFileloader_H__
 #define __RFileloader_H__
 #include <cstring>
-#include "../view/3dgl/RTextures.h"
-#include "../view/3dgl/RDrawable.h"
-#include "../view/3dgl/ShaderSpecs.h"
+#include <view/Textures.h>
+#include <view/Drawable.h>
+#include <view\Anim.h>
 #include <string>
 #include <stdexcept>
 #include <memory>
@@ -21,15 +21,15 @@
 //	RData class 1.04.14 schreiner
 //==========================
 //#define ifor( x ) for( int i = 0; i < x; ++i )
-class RFileLoader
+class FileLoader
 {
 public:
-	static std::unique_ptr< RImage[] > loadImage( std::string*  , int );
-	static std::unique_ptr< RImage[] > loadImage( std::string );
-	static std::unique_ptr< RImage[] > loadImageBin( std::shared_ptr< std::ifstream > stream , int count );
-	static std::unique_ptr< RPolymesh > loadPolyMeshBin( std::shared_ptr< std::ifstream > stream , int type );
+	static std::unique_ptr< Image[] > loadImage( std::string*  , int );
+	static std::unique_ptr< Image[] > loadImage( std::string );
+	static std::unique_ptr< Image[] > loadImageBin( std::shared_ptr< std::ifstream > stream , int count );
+	static std::unique_ptr< Polymesh > loadPolyMeshBin( std::shared_ptr< std::ifstream > stream , int type );
 	static uint binarize( uint c );
-	static std::unique_ptr< RAnimationset[] > loadAnimSetBin( std::shared_ptr< std::ifstream > stream , int count );
+	static std::unique_ptr< Animationset[] > loadAnimSetBin( std::shared_ptr< std::ifstream > stream , int count );
 	static std::shared_ptr< std::ifstream > getStream( const char *filename );
 	static std::string loadFile( std::string filename );
 	static std::string append( std::string const &t1 , std::string const &t2 );

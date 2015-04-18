@@ -34,7 +34,8 @@ void WindowGL::run()
 	SDL_GLContext maincontext;
 	mainwindow = SDL_CreateWindow( "PROGRAM_NAME" , SDL_WINDOWPOS_CENTERED , SDL_WINDOWPOS_CENTERED , 512 , 512 , SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
 	maincontext = SDL_GL_CreateContext( mainwindow );
-	glewInit();
+	glewExperimental = GL_TRUE;
+	std::cout << "glew init:" << glewInit() << "\n";
 	glEnable( GL_POINT_SMOOTH );
 	glEnable( GL_CULL_FACE );
 	glCullFace( GL_BACK );
@@ -103,7 +104,7 @@ void WindowGL::run()
 				break;
 			}
 		}
-		_eventer->update( this->__key_state , this->__mouse_state , &this->__mouse_pos , _mwheel );
+		//_eventer->update( this->__key_state , this->__mouse_state , &this->__mouse_pos , _mwheel );
 		SDL_GetWindowSize( mainwindow , &_screen_width , &_screen_height );
 		_func( _screen_width , _screen_height );
 		updateTime();

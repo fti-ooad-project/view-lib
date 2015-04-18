@@ -1,16 +1,17 @@
-#include "../base/RFileloader.h"
-#include "../view/3dgl/RVertex.h"
-std::unique_ptr< RImage[] > RFileLoader::loadImage( std::string filename )
+#include <base/Fileloader.h>
+#include <view/Vertex.h>
+#include <view/ShaderSpecs.h>
+std::unique_ptr< Image[] > FileLoader::loadImage( std::string filename )
 {
 	return std::move( loadImage( &filename , 1 ) );
 }
-std::unique_ptr< RImage[] > RFileLoader::loadImage( std::string *filename , int count )
+std::unique_ptr< Image[] > FileLoader::loadImage( std::string *filename , int count )
 {
 	if( !IMG_Init( IMG_INIT_PNG | IMG_INIT_JPG ) )
 	{
 		printf( "SDL_image could not initialize! SDL_image Error: %s\n" , IMG_GetError() );
 	}
-	std::unique_ptr< RImage[] > out( new RImage[ count ] );
+	std::unique_ptr< Image[] > out( new Image[ count ] );
 	ito( count )
 	{
 		SDL_Surface *loadedSurface = IMG_Load( filename[ i ].c_str() );
@@ -22,15 +23,15 @@ std::unique_ptr< RImage[] > RFileLoader::loadImage( std::string *filename , int 
 		uint bpp = loadedSurface->pitch / loadedSurface->w;
 		std::unique_ptr< char[] > data( new char[ loadedSurface->h * loadedSurface->w * bpp ] );
 		memcpy( data.get() , loadedSurface->pixels , loadedSurface->h * loadedSurface->w * bpp );
-		out[ i ] = std::move( RImage( std::move( data ) , RSize{ uint( loadedSurface->w ) , uint( loadedSurface->h ) } , bpp ) );
+		out[ i ] = std::move( Image( std::move( data ) , Size{ uint( loadedSurface->w ) , uint( loadedSurface->h ) } , bpp ) );
 		SDL_FreeSurface( loadedSurface );
 	}
 	IMG_Quit();
 	return std::move( out );
 }
-std::unique_ptr< RImage[] > RFileLoader::loadImageBin( std::shared_ptr< std::ifstream > stream , int count )
+std::unique_ptr< Image[] > FileLoader::loadImageBin( std::shared_ptr< std::ifstream > stream , int count )
 {
-	std::unique_ptr< RImage[] > out( new RImage[ count ] );
+	std::unique_ptr< Image[] > out( new Image[ count ] );
 	ito( count )
 	{
 		uint h , w;
@@ -38,18 +39,18 @@ std::unique_ptr< RImage[] > RFileLoader::loadImageBin( std::shared_ptr< std::ifs
 		stream->read( ( char * )&h , sizeof( int ) );
 		std::unique_ptr< char[] > data( new char[ h * w * 4 ] );
 		stream->read( ( char * )data.get() , 4 * w * h );
-		out[ i ] = std::move( RImage( std::move( data ) , RSize{ w , h } , 4 ) );
+		out[ i ] = std::move( Image( std::move( data ) , Size{ w , h } , 4 ) );
 	}
 	return std::move( out );
 }
-std::unique_ptr< RPolymesh > RFileLoader::loadPolyMeshBin( std::shared_ptr< std::ifstream > stream , int type )
+std::unique_ptr< Polymesh > FileLoader::loadPolyMeshBin( std::shared_ptr< std::ifstream > stream , int type )
 {
-	std::unique_ptr< RPolymesh > out( new RPolymesh() );
+	std::unique_ptr< Polymesh > out( new Polymesh() );
 	out->_flags = 0;
 	out->_type = type;
 	switch( type )
 	{
-		case RPolymesh::RPolyMeshType::RBONED_PMESH:
+	case Polymesh::PolyMeshType::BONED_PMESH:
 		{
 			out->_flags |= ShaderMask::MASK_ANIMATED;
 			stream->read( ( char * )&out->_v3size , sizeof( float ) * 3 );
@@ -64,7 +65,7 @@ std::unique_ptr< RPolymesh > RFileLoader::loadPolyMeshBin( std::shared_ptr< std:
 			stream->read( ( char * )out->__indeces.get() , sizeof( unsigned short )*out->_face_count * 3 );
 		}
 		break;
-		case RPolymesh::RPolyMeshType::RSTATIC_PMESH:
+	case Polymesh::PolyMeshType::STATIC_PMESH:
 		{
 			stream->read( ( char * )&out->_v3size , sizeof( float ) * 3 );
 			stream->read( ( char * )&out->_face_count , sizeof( unsigned int ) );
@@ -102,7 +103,7 @@ std::unique_ptr< RPolymesh > RFileLoader::loadPolyMeshBin( std::shared_ptr< std:
 		}
 		out->_textures = std::move( loadImage( fnames.get() , img_count ) );
 	}
-	if( type != RPolymesh::RPolyMeshType::RBONED_PMESH )
+	if( type != Polymesh::PolyMeshType::BONED_PMESH )
 	{
 		stream->close();
 		return std::move( out );
@@ -120,7 +121,7 @@ std::unique_ptr< RPolymesh > RFileLoader::loadPolyMeshBin( std::shared_ptr< std:
 	stream->close();
 	return std::move( out );
 }
-uint RFileLoader::binarize( uint c )
+uint FileLoader::binarize( uint c )
 {
 	uint t;
 	ito( 32 )
@@ -130,9 +131,9 @@ uint RFileLoader::binarize( uint c )
 	}
 	return 0;
 }
-std::unique_ptr< RAnimationset[] > RFileLoader::loadAnimSetBin( std::shared_ptr< std::ifstream > stream , int count )
+std::unique_ptr< Animationset[] > FileLoader::loadAnimSetBin( std::shared_ptr< std::ifstream > stream , int count )
 {
-	std::unique_ptr< RAnimationset[] > out( new RAnimationset[ count ] );
+	std::unique_ptr< Animationset[] > out( new Animationset[ count ] );
 	/*int anim_count = 0;
 	stream->read( ( char* )&anim_count , sizeof( int ) );
 	int bcount = 0;
@@ -149,7 +150,7 @@ std::unique_ptr< RAnimationset[] > RFileLoader::loadAnimSetBin( std::shared_ptr<
 		//stream->read( ( char * )out[i].__data.get() , sizeof( f4x4 )*fc*bc );
 		std::unique_ptr< f4x4[] > data( new f4x4[ fc*bc ] );
 		stream->read( ( char * )data.get() , sizeof( f4x4 ) * fc * bc );
-		out[ i ] = std::move( RAnimationset( std::move( data ) , fc , bc ) );
+		out[ i ] = std::move( Animationset( std::move( data ) , fc , bc ) );
 	}
 	return std::move( out );
 }
@@ -167,8 +168,8 @@ quad.getModelMat().scale( 100.0f );
 //MARK
 
 std::shared_ptr< std::ifstream > orc_s = getStream( "res/view/polymodels/monkey.bin" );
-RDrawablePTR orc_ptr = out_scene->genPolyMesh( loadPolyMeshBin( orc_s , RPolymesh::RPolyMeshType::RBONED_PMESH ) );
-std::unique_ptr< RAnimationset[] > orc_sets{ std::move( loadAnimSetBin( orc_s ) ) };
+RDrawablePTR orc_ptr = out_scene->genPolyMesh( loadPolyMeshBin( orc_s , Polymesh::PolymeshType::RBONED_PMESH ) );
+std::unique_ptr< Animationset[] > orc_sets{ std::move( loadAnimSetBin( orc_s ) ) };
 out_scene->genBoneAnimInTex( std::move( orc_sets ) , 1 );
 int l = 10;
 ifor( i , 0 , l )
@@ -187,14 +188,14 @@ RPassDesc( 2048 , 2048 , 1 , -1 , RBufferType::RBUFFER_FLOAT ) , f4( 1.0f , 1.0f
 printf( err.what() );
 }
 }*/
-std::shared_ptr< std::ifstream > RFileLoader::getStream( const char *filename )
+std::shared_ptr< std::ifstream > FileLoader::getStream( const char *filename )
 {
 	std::shared_ptr< std::ifstream > out( new std::ifstream( filename , std::ios::in | std::ios::binary ) );
 	if( !out->is_open() )
 		throw std::logic_error( "cannot open file\n" );
 	return out;
 }
-std::string RFileLoader::loadFile( std::string filename )
+std::string FileLoader::loadFile( std::string filename )
 {
 	std::ifstream file( filename );
 	if( file.is_open() )
@@ -219,7 +220,7 @@ std::string RFileLoader::loadFile( std::string filename )
 		throw std::logic_error( filename );
 	}
 	}
-std::string RFileLoader::append( std::string const &t1 , std::string const &t2 )
+std::string FileLoader::append( std::string const &t1 , std::string const &t2 )
 {
 	char *temp = new char( t1.length() + t2.length() );
 	memcpy( temp , t1.c_str() , t1.length() );

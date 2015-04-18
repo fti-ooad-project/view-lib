@@ -1,10 +1,10 @@
 #ifndef RDRAWABLEGL_H
 #define RDRAWABLEGL_H
 #include <view/Drawable.h>
-#include "GL.h"
+#include "GLincludes.h"
 #include "AnimGL.h"
 #include "TexturesGL.h"
-#include "ShaderSpecs.h"
+#include <view/ShaderSpecs.h>
 #include <view/Vertex.h>
 struct InstanceInfo
 {
@@ -44,32 +44,32 @@ public:
 class ComplexPolyMeshGL : public PolyMeshGL
 {
 public:
-	RTextureHolderGL __textures;
-	RBoneAnimInTexHolderGL __anim_intex;
-	std::unique_ptr< RPolymesh > __mesh;
+	TextureHolderGL __textures;
+	BoneAnimInTexHolderGL __anim_intex;
+	std::unique_ptr< Polymesh > __mesh;
 	int _bone_count;
 public:
 
-	RComplexPolyMeshGL() = default;
-	RComplexPolyMeshGL( RComplexPolyMeshGL && );
-	void operator=( RComplexPolyMeshGL && );
-	RComplexPolyMeshGL( std::unique_ptr< RPolymesh > && );
-	void init( std::unique_ptr< RPolymesh > && );
+	ComplexPolyMeshGL() = default;
+	ComplexPolyMeshGL( ComplexPolyMeshGL && );
+	void operator=( ComplexPolyMeshGL && );
+	ComplexPolyMeshGL( std::unique_ptr< Polymesh > && );
+	void init( std::unique_ptr< Polymesh > && );
 	void init();
 	void release() override;
-	~RComplexPolyMeshGL();
+	~ComplexPolyMeshGL();
 	void bindRes( InstanceInfo const & ) const override;
 };
 struct PolyQuadGL : public PolyMeshGL
 {
 	void init();
-	~RPolyQuadGL();
+	~PolyQuadGL();
 	void bindRes( InstanceInfo const & ) const override;
 };
 struct PolyBoxGL : public PolyMeshGL
 {
 	void init();
-	~RPolyBoxGL();
+	~PolyBoxGL();
 	void bindRes( InstanceInfo const & ) const override;
 };
 #endif // RDRAWABLEGL_H
