@@ -27,13 +27,13 @@ private:
 public:
 	//thrust::device_vector< Material > _material;
 	f3 _pos;
-	virtual DEVICE Collision getCollision( Ray const & ) const = 0;
+	virtual DEVICE bool getCollision( Ray const & , Collision & ) const = 0;
 };
 class Sphere : public Object
 {
 public:
 	float _radius;
-	DEVICE Collision getCollision( Ray const & ) const override;
+	DEVICE bool getCollision( Ray const & , Collision & ) const override;
 };
 class Scene
 {
@@ -42,6 +42,6 @@ public:
 	unsigned int _obj_count;
 public:
 	//DEVICE void addObj( Object* );
-	DEVICE f4 traceRay( f3 const & , f3 const & );
+	DEVICE f4 traceRay( Ray const & , int , unsigned int ) const;
 };
 #endif

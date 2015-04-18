@@ -18,16 +18,8 @@
 #define DELTA 0.00000001f
 #define BETHA 99999999999.0f
 const float PI = 3.1415f;
-inline float wrap( float x , float min , float max )
-{
-	if( x > max ) return max;
-	if( x < min ) return min;
-	return x;
-}
-inline float sqr( float i )
-{
-	return i * i;
-}
+float wrap( float , float , float );
+float sqr( float );
 template< int N , typename T >
 struct array
 {

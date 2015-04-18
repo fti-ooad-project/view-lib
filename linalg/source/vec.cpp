@@ -343,3 +343,13 @@ f3 VectorFactory::getReflected(f3 const &v, f3 const &n)
 }
 std::random_device VectorFactory::dev;
 const float VectorFactory::PI = cosf( -1.0f );*/
+float wrap( float x , float min , float max )
+{
+	if( x > max ) return max;
+	if( x < min ) return min;
+	return x;
+}
+float sqr( float i )
+{
+	return i * i;
+}

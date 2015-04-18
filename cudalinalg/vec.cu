@@ -6,13 +6,13 @@ DEVICE float PI;
 //__device__ float randf[ RAND_COUNT ];
 DEVICE curandState randstate[ RANDSTATE_COUNT ];
 //__device__ unsigned int cur_rand;
-DEVICE float wrap( float x , float min , float max )
+DEVICE float c_wrap( float x , float min , float max )
 {
 	if( x > max ) return max;
 	if( x < min ) return min;
 	return x;
 }
-DEVICE float sqr( float i )
+DEVICE float c_sqr( float i )
 {
 	return i * i;
 }
@@ -55,13 +55,10 @@ DEVICE f3 VectorFactory::getRandomHalfSphere( unsigned int seed )
 DEVICE f3 VectorFactory::getRandomSphere( unsigned int seed )
 {
 	float phi = getRandom( seed ) * PI * 2.0f;
-	//float theta = PI * 0.5f + asinf( 2.0f * getRandom() - 1.0f );
 	float cp = cosf( phi );
 	float sp = sinf( phi );
 	float ct = -1.0f + 2.0f * getRandom( seed );
-		//cosf( theta );
 	float st = sqrtf( 1.0f - ct * ct );
-		//sinf( theta );
 	return f3( st * cp , st * sp , ct );
 }
 DEVICE f2 VectorFactory::getRandomCircle( unsigned int seed )

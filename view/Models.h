@@ -7,7 +7,7 @@
 //==========================
 //	REntity class 26.03.14 schreiner
 //==========================
-class REntity
+class Entity
 {
 public:
 	f3 _v3pos;

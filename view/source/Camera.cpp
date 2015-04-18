@@ -1,9 +1,9 @@
-#include "../view/export/RCamera.h"
-f4x4 const &RCamera::getViewProj() const
+#include <view/Camera.h>
+f4x4 const &Camera::getViewProj() const
 {
 	return _view_proj_matrix;
 }
-f4x4 const &RCamera::calc()
+f4x4 const &Camera::calc()
 {
 	if( _calc_m4x4 ) return _view_proj_matrix;
 	_calc_m4x4 = false;
@@ -31,7 +31,7 @@ f4x4 const &RCamera::calc()
 	//_view_proj_matrix.row(0).print();
 	return _view_proj_matrix;
 }
-void RCamera::lookAt( const f3 &pos , const f3 &whrlook , const f3 &v3local_y )
+void Camera::lookAt( const f3 &pos , const f3 &whrlook , const f3 &v3local_y )
 {
 	_v3local_z = ( whrlook - pos ).g_norm();
 	_v3local_x = vecx( _v3local_z , v3local_y ).g_norm();
@@ -39,13 +39,13 @@ void RCamera::lookAt( const f3 &pos , const f3 &whrlook , const f3 &v3local_y )
 	_v3pos = pos;
 	this->pushChange();
 }
-void RCamera::pos( const f3 &pos )
+void Camera::pos( const f3 &pos )
 {
 	if( pos.g_dist2( _v3pos ) < 0.001f ) return;
 	_v3pos = pos;
 	this->pushChange();
 }
-void RCamera::angle( const float phi , const float theta )
+void Camera::angle( const float phi , const float theta )
 {
 	//_v3rotation += f3( phi , theta , 0.0f );
 	_v3local_z = f3( sin( theta ) * cos( phi ) , sin( theta ) * sin( phi ) , cos( theta ) );
@@ -53,20 +53,20 @@ void RCamera::angle( const float phi , const float theta )
 	_v3local_y = vecx( _v3local_x , _v3local_z );
 	this->pushChange();
 }
-void RCamera::setAspect( float ax , float ay ) const
+void Camera::setAspect( float ax , float ay ) const
 {
 	_fovx = ax;
 	_fovy = ay;
 	pushChange();
 }
-void RCamera::perspective( const float nearp , const float farplane , const float aspectx , const float aspecty )
+void Camera::perspective( const float nearp , const float farplane , const float aspectx , const float aspecty )
 {
 	_nearplane = nearp;
 	_farplane = farplane;
 	_fovx = aspectx;
 	_fovy = aspecty;
 }
-f4x4 RCamera::perpLookUp1x1( const f3 &pos , const f3 &look , const f3 &up )
+f4x4 Camera::perpLookUp1x1( const f3 &pos , const f3 &look , const f3 &up )
 {
 	f4x4 view , proj;
 	float farp = 1000.0f , nearp = 1.0f;
@@ -89,7 +89,7 @@ f4x4 RCamera::perpLookUp1x1( const f3 &pos , const f3 &look , const f3 &up )
 	//view.print();
 	return view * proj;
 }
-f4x4 RCamera::orthographic( const f3 &pos , const f3 &z , const f3 &local_y , const float dx )
+f4x4 Camera::orthographic( const f3 &pos , const f3 &z , const f3 &local_y , const float dx )
 {
 	f4x4 view , proj;
 	float farp = 100.0f , nearp = 1.0f;
@@ -112,16 +112,16 @@ f4x4 RCamera::orthographic( const f3 &pos , const f3 &z , const f3 &local_y , co
 		-x * pos , -y * pos , -z * pos , 1.0f );
 	return view * proj;
 }
-void RCamera::genCubeCamera( f4x4 *out , const f3 &pos )
+void Camera::genCubeCamera( f4x4 *out , const f3 &pos )
 {
-	out[ 0 ] = RCamera::perpLookUp1x1( pos , f3( 1.0f , 0.0f , 0.0f ) , f3( 0.0f , 1.0f , 0.0f ) );
-	out[ 1 ] = RCamera::perpLookUp1x1( pos , f3( -1.0f , 0.0f , 0.0f ) , f3( 0.0f , 1.0f , 0.0f ) );
-	out[ 2 ] = RCamera::perpLookUp1x1( pos , f3( 0.0f , 1.0f , 0.0f ) , f3( 0.0f , 0.0f , -1.0f ) );
-	out[ 3 ] = RCamera::perpLookUp1x1( pos , f3( 0.0f , -1.0f , 0.0f ) , f3( 0.0f , 0.0f , 1.0f ) );
-	out[ 4 ] = RCamera::perpLookUp1x1( pos , f3( 0.0f , 0.0f , 1.0f ) , f3( 0.0f , 1.0f , 0.0f ) );
-	out[ 5 ] = RCamera::perpLookUp1x1( pos , f3( 0.0f , 0.0f , -1.0f ) , f3( 0.0f , 1.0f , 0.0f ) );
+	out[ 0 ] = Camera::perpLookUp1x1( pos , f3( 1.0f , 0.0f , 0.0f ) , f3( 0.0f , 1.0f , 0.0f ) );
+	out[ 1 ] = Camera::perpLookUp1x1( pos , f3( -1.0f , 0.0f , 0.0f ) , f3( 0.0f , 1.0f , 0.0f ) );
+	out[ 2 ] = Camera::perpLookUp1x1( pos , f3( 0.0f , 1.0f , 0.0f ) , f3( 0.0f , 0.0f , -1.0f ) );
+	out[ 3 ] = Camera::perpLookUp1x1( pos , f3( 0.0f , -1.0f , 0.0f ) , f3( 0.0f , 0.0f , 1.0f ) );
+	out[ 4 ] = Camera::perpLookUp1x1( pos , f3( 0.0f , 0.0f , 1.0f ) , f3( 0.0f , 1.0f , 0.0f ) );
+	out[ 5 ] = Camera::perpLookUp1x1( pos , f3( 0.0f , 0.0f , -1.0f ) , f3( 0.0f , 1.0f , 0.0f ) );
 }
-bool RCamera::fristrum( f3 const &p , float size ) const
+bool Camera::fristrum( f3 const &p , float size ) const
 {
 	f3 np = p - _v3pos;
 	float z = np * _v3local_z;
@@ -132,7 +132,7 @@ bool RCamera::fristrum( f3 const &p , float size ) const
 	if( fabsf( y ) / z > tanf( _fovy / 2.0f + 0.2f ) ) return false;
 	return true;
 }
-bool RCamera::fristrum2d( f2 const & p ) const
+bool Camera::fristrum2d( f2 const & p ) const
 {
 	return false;
 }

@@ -1,9 +1,9 @@
 #include <view\Models.h>
-void REntity::pushChange() const
+void Entity::pushChange() const
 {
 	_calc_m4x4 = false;
 }
-f4x4 const &REntity::calcModelm4x4()
+f4x4 const &Entity::calcModelm4x4()
 {
 	if (_calc_m4x4) return _m4model_matrix;
 	_calc_m4x4 = true;
@@ -20,7 +20,7 @@ f4x4 const &REntity::calcModelm4x4()
 		_v3pos.x(), _v3pos.y(), _v3pos.z(), 1.0f);
 	return _m4model_matrix;
 }
-f4x4 const &REntity::getModelm4x4()
+f4x4 const &Entity::getModelm4x4()
 {
 	return _m4model_matrix;
 }

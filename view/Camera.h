@@ -1,11 +1,11 @@
 #ifndef RCAMERA_H
 #define RCAMERA_H
-#include "../../linalg/vec.h"
-#include "../../linalg/mat.h"
+#include <linalg/vec.h>
+#include <linalg/mat.h>
 #include <memory>
-#include "../../base/RModels.h"
-#include "../../base/RBase.h"
-class RCamera : public REntity
+#include <view/Models.h>
+#include <base/Base.h>
+class Camera : public Entity
 {
 private:
 	float		_nearplane = 0.1f;

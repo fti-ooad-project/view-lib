@@ -16,8 +16,8 @@
 #define Y( v ) v.getValue( 1 )
 #define DELTA 0.00000001f
 #define BETHA 99999999999.0f
-DEVICE float wrap( float , float , float );
-DEVICE float sqr( float );
+DEVICE float c_wrap( float , float , float );
+DEVICE float c_sqr( float );
 template< int N , typename T >
 struct array
 {
@@ -160,7 +160,7 @@ struct vec : public accessor < N , T >
 	{
 		float d = 0.0f;
 		for( int i = 0; i < N; i++ )
-			d += sqr( this->getValue( i ) - v.getValue( i ) );
+			d += c_sqr( this->getValue( i ) - v.getValue( i ) );
 		return d;
 	}
 	DEVICE vec< N , T > g_add( vec< N , T > const &v ) const
@@ -183,7 +183,7 @@ struct vec : public accessor < N , T >
 	{
 		float d = 0.0f;
 		for( int i = 0; i < N; i++ )
-			d += sqr( this->getValue( i ) );
+			d += c_sqr( this->getValue( i ) );
 		return d;
 	}
 	DEVICE float g_mod() const
@@ -268,7 +268,7 @@ struct vec : public accessor < N , T >
 		if( this->g_dist2( v ) < DELTA ) return 0.0f;
 		auto v1 = ( *this ).g_norm();
 		auto v2 = v.g_norm();
-		float scl = acos( wrap( v1 * v2 , -1.0f , 1.0f ) );
+		float scl = acos( c_wrap( v1 * v2 , -1.0f , 1.0f ) );
 		float sgn = lperp( v1 ) * v2;
 		if( sgn < 0.0f )
 			scl = -scl;
@@ -320,9 +320,9 @@ DEVICE vec< 2 , T > rotate( vec< 2 , T > const &v , float a )
 	return vec< 2 , T >( X( v ) * c - Y( v ) * s , Y( v ) * c + X( v ) * s );
 }
 template< int N , typename T >
-DEVICE vec< N , T > wrap( vec< N , T > const &v , float min , float max )
+DEVICE vec< N , T > c_wrap( vec< N , T > const &v , float min , float max )
 {
-	return v.g_norm() * wrap( v.g_mod() , min , max );
+	return v.g_norm() * c_wrap( v.g_mod() , min , max );
 }
 typedef vec< 2 , float > f2;
 typedef vec< 2 , int > i2;
