@@ -6,7 +6,7 @@
 #include <memory>
 struct Collision
 {
-	bool _collided;
+	bool _inside;
 	f3 _pos , _n;
 	float _dist2;
 };
@@ -16,16 +16,18 @@ struct Ray
 };
 struct Material
 {
+	f3 _color;
 	float _transperency;
 	float _n;
 	float _spec;
-	float _metallness;
+	bool _metallness;
+	bool _emit;
 };
 class Object
 {
 private:
 public:
-	//thrust::device_vector< Material > _material;
+	Material _material;
 	f3 _pos;
 	virtual DEVICE bool getCollision( Ray const & , Collision & ) const = 0;
 };
@@ -35,6 +37,12 @@ public:
 	float _radius;
 	DEVICE bool getCollision( Ray const & , Collision & ) const override;
 };
+class InfPlane : public Object
+{
+public:
+	f3 _n;
+	DEVICE bool getCollision( Ray const & , Collision & ) const override;
+};
 class Scene
 {
 public:
@@ -42,6 +50,6 @@ public:
 	unsigned int _obj_count;
 public:
 	//DEVICE void addObj( Object* );
-	DEVICE f4 traceRay( Ray const & , int , unsigned int ) const;
+	DEVICE f3 traceRay( Ray const & , int , unsigned int , unsigned int ) const;
 };
 #endif

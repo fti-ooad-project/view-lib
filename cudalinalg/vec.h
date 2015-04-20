@@ -253,6 +253,11 @@ struct vec : public accessor < N , T >
 			out += this->getValue( i ) * v.getValue( i );
 		return out;
 	}
+	DEVICE void operator*=( float k )
+	{
+		for( int i = 0; i < N; i++ )
+			this->getValue( i ) *= k;
+	}
 	DEVICE bool operator==( vec< N , T > const &v ) const
 	{
 		for( int i = 0; i < N; i++ )
@@ -338,7 +343,10 @@ public:
 	DEVICE static f3 getRandomHalfSphere( unsigned int );
 	DEVICE static f3 getRandomSphere( unsigned int );
 	DEVICE static f2 getRandomCircle( unsigned int );
-	DEVICE static f3 getReflected( f3 const &v , f3 const &n );
+	DEVICE static f3 getReflected( f3 const & , f3 const & );
+	DEVICE static f3 getRefracted( f3 const & , f3 const & , float );
+	DEVICE static f3 getDiffuseReflected( f3 const & , f3 const & , float , unsigned int );
+	DEVICE static f3 getDiffuseRefracted( f3 const & , f3 const & , float , float , unsigned int );
 	DEVICE static float getPI();
 };
 #endif // VEC_H

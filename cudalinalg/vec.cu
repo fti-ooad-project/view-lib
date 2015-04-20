@@ -71,3 +71,33 @@ DEVICE f3 VectorFactory::getReflected( f3 const &v , f3 const &n )
 {
 	return v - 2.0f * n * ( n * v );
 }
+DEVICE f3 VectorFactory::getRefracted( f3 const &v , f3 const &n , float kn )
+{
+	float cosa = -v * n;
+	float sina2 = 1.0f - cosa * cosa;
+	float sinb2 = sina2 * kn * kn;
+	if( sinb2 > 1.0f )
+		return getReflected( v , n );
+	float cosb = sqrtf( 1.0f - sinb2 );
+	return n * ( -cosb + cosa * kn ) + v * kn;
+}
+DEVICE f3 VectorFactory::getDiffuseReflected( f3 const &v , f3 const &n , float spec , unsigned int seed )
+{
+	f3 locx = vecx( v , n ).g_norm();
+	f3 locy = vecx( locx , n );
+	f3 kvec = getRandomHalfSphere( seed );
+	f3 rand_vec = n * kvec.z() + locx * kvec.x() + locy * kvec.y();
+	f3 refl = getReflected( v , n );
+	f3 out = ( refl * spec + rand_vec * ( 1.0 - spec ) ).g_norm();
+	return out;
+}
+DEVICE f3 VectorFactory::getDiffuseRefracted( f3 const &v , f3 const &n , float spec , float kn , unsigned int seed )
+{
+	f3 locx = vecx( v , n ).g_norm();
+	f3 locy = vecx( locx , n );
+	f3 kvec = getRandomHalfSphere( seed );
+	f3 rand_vec = n * kvec.z() + locx * kvec.x() + locy * kvec.y();
+	f3 refl = getRefracted( v , n , kn );
+	f3 out = ( refl * spec + rand_vec * ( 1.0 - spec ) ).g_norm();
+	return out;
+}
