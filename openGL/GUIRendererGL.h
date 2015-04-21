@@ -1,16 +1,16 @@
 #ifndef GIRENDERERGL_H
 #define GIRENDERERGL_H
-#include "../../GL.h"
-#include "../../../base/RBase.h"
-#include "../../3dgl/RTexturesGL.h"
-#include "../../../base/RFileloader.h"
-#include "../../3dgl/RViewModelsGL.h"
-#include "../../3dgl/RDrawableGL.h"
+#include <openGL\GLincludes.h>
+#include <base/Base.h>
+#include <openGL\TexturesGL.h>
+#include <base\Fileloader.h>
+#include <openGL\ViewModelsGL.h>
+#include <openGL\DrawableGL.h>
 #include "SDL2/SDL_ttf.h"
-class PanelDrawler : public RInitable
+class PanelDrawler : public Initable
 {
 private:
-	RTextureHolderGL _field_tex;
+	TextureHolderGL _field_tex;
 	uint _vao[9];
 public:
 	void init()
@@ -81,7 +81,7 @@ public:
 			glBindBuffer( GL_ARRAY_BUFFER_ARB , 0 );
 			glBindBuffer( GL_ELEMENT_ARRAY_BUFFER_ARB , 0 );
 		}
-		_field_tex.init( std::move( RFileLoader::loadImage( "res/view/images/gui_field.png" ) ) , 1 );
+		_field_tex.init( std::move( FileLoader::loadImage( "res/view/images/gui_field.png" ) ) , 1 );
 		_field_tex.setRepeat( false );
 	}
 	void drawPanel( f2 const &pos , f2 const &size , float border )
@@ -161,7 +161,7 @@ public:
 		return sng;
 	}
 };
-class TextRenderer : public RInitable
+class TextRenderer : public Initable
 {
 private:
 	TTF_Font *_font;
@@ -195,7 +195,7 @@ public:
 		_font = loadfont( "res/view/fonts/arial.ttf" , 32 );
 		TTF_SetFontStyle( _font , TTF_STYLE_NORMAL );
 	}
-	std::unique_ptr< RImage[] > renderText( std::string text )
+	std::unique_ptr< Image[] > renderText( std::string text )
 	{
 		SDL_Surface *srf = drawtext( text );
 		/*IMG_Init( IMG_INIT_JPG );
@@ -205,7 +205,7 @@ public:
 		//LOG << bpp << " " << srf->w << " " << srf->h << "\n";
 		std::unique_ptr< char[] > data( new char[srf->w * srf->h * bpp] );
 		memcpy( data.get() , srf->pixels , srf->w * srf->h * bpp );
-		std::unique_ptr< RImage[] > out( new RImage[1]{ { std::move( data ) , { uint( srf->w ) , uint( srf->h ) } , bpp } } );
+		std::unique_ptr< Image[] > out( new Image[1]{ { std::move( data ) , { uint( srf->w ) , uint( srf->h ) } , bpp } } );
 		SDL_FreeSurface( srf );
 		return std::move( out );
 	}
@@ -224,10 +224,10 @@ public:
 		return sing;
 	}
 };
-class GUITextHolderGL : public RInitable
+class GUITextHolderGL : public Initable
 {
 public:
-	RTextureHolderGL _text_texture;
+	TextureHolderGL _text_texture;
 	std::string _text;
 public:
 	GUITextHolderGL() = default;
@@ -252,7 +252,7 @@ public:
 		if( isInited() ) return;
 		setInited( true );
 		_text = text;
-		_text_texture = std::move( RTextureHolderGL( TextRenderer::getSingleton()->renderText( _text ) , 1 ) );
+		_text_texture = std::move( TextureHolderGL( TextRenderer::getSingleton()->renderText( _text ) , 1 ) );
 		_text_texture.init();
 	}
 	uint getTextureId() const
@@ -271,12 +271,12 @@ public:
 		release();
 	}
 };
-class GUIRendererGL : public RInitable
+class GUIRendererGL : public Initable
 {
 private:
-	RTextureHolderGL _panel_texture;
-	RGraphicProgrammGL _text_shader , _panel_shader;
-	RPolyQuadGL _gui_quad;
+	TextureHolderGL _panel_texture;
+	GraphicProgrammGL _text_shader , _panel_shader;
+	PolyQuadGL _gui_quad;
 	char chars_per_row = 16;
 	std::vector< GUITextHolderGL > _text_vector;
 	uint genText( std::string const text )
@@ -337,7 +337,7 @@ public:
 		_gui_quad.init();
 		_text_shader.init( "res/shaders/glsl/text_shader.glsl" , "res/shaders/glsl/gui_vertex.glsl" );
 		_panel_shader.init( "res/shaders/glsl/panel_shader.glsl" , "res/shaders/glsl/gui_vertex.glsl" );
-		_panel_texture.init( std::move( RFileLoader::loadImage( "res/view/images/panel.png" ) ) , 1 );
+		_panel_texture.init( std::move( FileLoader::loadImage( "res/view/images/panel.png" ) ) , 1 );
 		_panel_texture.setRepeat( false );
 	}
 	void renderLayout( int w , int h , GUILayout const *layout )

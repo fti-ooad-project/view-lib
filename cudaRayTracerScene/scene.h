@@ -14,6 +14,12 @@ struct Ray
 {
 	f3 _pos , _v;
 };
+struct Photon
+{
+	f3 _pos;
+	f3 _dir;
+	f3 _color;
+};
 struct Material
 {
 	f3 _color;
@@ -42,6 +48,13 @@ class InfPlane : public Object
 public:
 	f3 _n;
 	DEVICE bool getCollision( Ray const & , Collision & ) const override;
+};
+class PhotonMap
+{
+public:
+	DEVICE void setSize( f3 const & , float , unsigned int );
+	DEVICE void add( Photon const & );
+	DEVICE int getClosest( Photon const * ) const;
 };
 class Scene
 {

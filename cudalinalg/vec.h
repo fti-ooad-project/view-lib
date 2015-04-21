@@ -56,11 +56,18 @@ public:
 	{
 		return __data[ 2 ];
 	}
+	DEVICE T &w()
+	{
+		return __data[ 3 ];
+	}
+	DEVICE T const &w() const
+	{
+		return __data[ 3 ];
+	}
 	DEVICE T const *getArray() const
 	{
 		return __data;
 	}
-
 };
 template< int N , typename T >
 struct accessor : public array < N , T >
@@ -290,6 +297,10 @@ struct vec : public accessor < N , T >
 	DEVICE vec< N , T > operator-( ) const
 	{
 		return *this * -1.0f;
+	}
+	DEVICE vec< 2 , T > xy() const
+	{
+		return vec< 2 , T >( __data[ 0 ] , __data[ 1 ] );
 	}
 };
 template< int N , typename T >

@@ -1,5 +1,5 @@
-#include "../view/3dgl/Blurer.h"
-#include "../view/GL.h"
+#include <openGL\Blurer.h>
+#include <openGL\GLincludes.h>
 uint Blurer::process( uint buffid , float radius )
 {
 	_process_prog.bind();
@@ -28,7 +28,7 @@ void Blurer::init()
 	if( isInited() ) return;
 	setInited( true );
 	_process_prog.init( "res/shaders/glsl/blur.glsl" , "res/shaders/glsl/screen_quad_vertex.glsl" );
-	_process_pass.init( { { 512 , 512 } , RBufferStoreType::RBUFFER_FLOAT , 1 , -1 ,
+	_process_pass.init( { { 512 , 512 } , BufferStoreType::BUFFER_FLOAT , 1 , -1 ,
 						false , false , 4 } );
 	_screen_quad.init();
 }

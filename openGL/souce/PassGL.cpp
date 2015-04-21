@@ -405,8 +405,8 @@ void UnpackBufferGL::init( const Size &size , uint component_count , int storage
 	glBindTexture( GL_TEXTURE_2D , _texture_id );
 	glTexParameteri( GL_TEXTURE_2D , GL_TEXTURE_WRAP_S , GL_CLAMP );
 	glTexParameteri( GL_TEXTURE_2D , GL_TEXTURE_WRAP_T , GL_CLAMP );
-	glTexParameteri( GL_TEXTURE_2D , GL_TEXTURE_MAG_FILTER , GL_NEAREST );
-	glTexParameteri( GL_TEXTURE_2D , GL_TEXTURE_MIN_FILTER , GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_2D , GL_TEXTURE_MAG_FILTER , GL_LINEAR );
+	glTexParameteri( GL_TEXTURE_2D , GL_TEXTURE_MIN_FILTER , GL_LINEAR );
 	glTexImage2D( GL_TEXTURE_2D , 0 , _gl_type , size._w , size._h , 0 , _gl_format , _gl_store , nullptr );
 	glBindTexture( GL_TEXTURE_2D , 0 );
 	_size = size;

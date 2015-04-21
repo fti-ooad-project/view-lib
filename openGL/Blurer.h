@@ -1,14 +1,14 @@
 #pragma once
-#include "RPassGL.h"
-#include "RViewModelsGL.h"
-#include "RDrawableGL.h"
-#include "../../base/RBase.h"
-class Blurer : public RInitable
+#include <openGL\PassGL.h>
+#include <openGL\ViewModelsGL.h>
+#include <openGL\DrawableGL.h>
+#include <base/Base.h>
+class Blurer : public Initable
 {
 private:
-	RDrawPassGL _process_pass;
-	RGraphicProgrammGL _process_prog;
-	RPolyQuadGL _screen_quad;
+	DrawPassGL _process_pass;
+	GraphicProgrammGL _process_prog;
+	PolyQuadGL _screen_quad;
 public:
 	Blurer() = default;
 	uint process( uint , float );
