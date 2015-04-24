@@ -14,10 +14,15 @@ struct Ray
 {
 	f3 _pos , _v;
 };
+struct QueueRay
+{
+	f3 _pos , _v , _color_k;
+	unsigned int _dir_pixel;
+};
 struct Photon
 {
 	f3 _pos;
-	f3 _dir;
+	f3 _v;
 	f3 _color;
 };
 struct Material
@@ -56,6 +61,20 @@ public:
 	DEVICE void add( Photon const & );
 	DEVICE int getClosest( Photon const * ) const;
 };
+class RayQueue
+{
+private:
+	int _pos;
+public:
+	int _array_size;
+	QueueRay *_array;
+	f4 *_screen;
+	i2 _size;
+	DEVICE void add( QueueRay const & );
+	DEVICE void writePixel( f3 const & , unsigned int );
+	DEVICE unsigned int getSize() const;
+	DEVICE void empty();
+};
 class Scene
 {
 public:
@@ -63,6 +82,7 @@ public:
 	unsigned int _obj_count;
 public:
 	//DEVICE void addObj( Object* );
-	DEVICE f3 traceRay( Ray const & , int , unsigned int , unsigned int ) const;
+	//DEVICE f3 traceRay( Ray const & , int , unsigned int , unsigned int ) const;
+	DEVICE void traceRayQueued( QueueRay const & , RayQueue * , unsigned int , unsigned int ) const;
 };
 #endif

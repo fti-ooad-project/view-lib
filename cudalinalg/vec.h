@@ -353,6 +353,7 @@ public:
 	DEVICE static float getRandom( unsigned int );
 	DEVICE static f3 getRandomHalfSphere( unsigned int );
 	DEVICE static f3 getRandomSphere( unsigned int );
+	DEVICE static f3 getRandomCosHalfSphere( unsigned int );
 	DEVICE static f2 getRandomCircle( unsigned int );
 	DEVICE static f3 getReflected( f3 const & , f3 const & );
 	DEVICE static f3 getRefracted( f3 const & , f3 const & , float );
