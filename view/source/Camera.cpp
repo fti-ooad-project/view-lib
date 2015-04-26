@@ -121,6 +121,10 @@ void Camera::genCubeCamera( f4x4 *out , const f3 &pos )
 	out[ 4 ] = Camera::perpLookUp1x1( pos , f3( 0.0f , 0.0f , 1.0f ) , f3( 0.0f , 1.0f , 0.0f ) );
 	out[ 5 ] = Camera::perpLookUp1x1( pos , f3( 0.0f , 0.0f , -1.0f ) , f3( 0.0f , 1.0f , 0.0f ) );
 }
+f3 Camera::getCameraRay( f2 const &k ) const
+{
+	return ( _v3local_z + _v3local_x * k.x() * tan( _fovx * 0.5f ) + _v3local_y * k.y() * tan( _fovy * 0.5f ) ).g_norm();
+}
 bool Camera::fristrum( f3 const &p , float size ) const
 {
 	f3 np = p - _v3pos;

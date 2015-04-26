@@ -36,7 +36,6 @@ public:
 	struct PolyMeshType{
 		static const int BONED_PMESH = 0  , STATIC_PMESH = 1;
 	};
-	int				_flags;
 	int				_type;
 	f3				_v3size;
 	uint        _vertex_count;
@@ -44,16 +43,10 @@ public:
 	uint        _bone_count;
 	std::unique_ptr< char[] > __vertices;
 	std::unique_ptr< unsigned short[] > __indeces;
-	std::unique_ptr< Animationset[] > __mat4anim;
-	uint _anim_count = 0;
-	std::unique_ptr< Image[] > _textures;
-	uint _texture_count = 0;
 	void release()
 	{
 		__vertices.reset();
 		__indeces.reset();
-		_textures.reset();
-		__mat4anim.reset();
 	}
 };
 #endif

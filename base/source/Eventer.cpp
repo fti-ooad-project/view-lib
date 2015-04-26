@@ -80,7 +80,7 @@ void Eventer::run()
 				i( _dt );
 			_udated = false;
 		}
-		//sleep( 0x1 );
+		//sleep( 0x10 );
 	}
 }
 void Eventer::release()

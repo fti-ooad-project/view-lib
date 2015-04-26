@@ -14,6 +14,7 @@ void BoneAnimInTexHolderGL::operator=( BoneAnimInTexHolderGL &&a )
 	{
 		//__texture_pointer_array = std::move(a.__texture_pointer_array);
 		//__frame_count = std::move( a.__frame_count );
+		_bone_count = a._bone_count;
 		_texture_array_pointer = a._texture_array_pointer;
 		a._texture_array_pointer = 0;
 	} else

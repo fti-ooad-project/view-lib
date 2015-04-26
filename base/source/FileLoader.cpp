@@ -46,13 +46,11 @@ std::unique_ptr< Image[] > FileLoader::loadImageBin( std::shared_ptr< std::ifstr
 std::unique_ptr< Polymesh > FileLoader::loadPolyMeshBin( std::shared_ptr< std::ifstream > stream , int type )
 {
 	std::unique_ptr< Polymesh > out( new Polymesh() );
-	out->_flags = 0;
 	out->_type = type;
 	switch( type )
 	{
 	case Polymesh::PolyMeshType::BONED_PMESH:
 		{
-			out->_flags |= ShaderMask::MASK_ANIMATED;
 			stream->read( ( char * )&out->_v3size , sizeof( float ) * 3 );
 			stream->read( ( char * )&out->_bone_count , sizeof( unsigned int ) );
 			stream->read( ( char * )&out->_face_count , sizeof( unsigned int ) );
@@ -77,48 +75,6 @@ std::unique_ptr< Polymesh > FileLoader::loadPolyMeshBin( std::shared_ptr< std::i
 		}
 		break;
 	}
-	int img_count;
-	stream->read( ( char* )&img_count , sizeof( int ) );
-	out->_texture_count = img_count;
-	out->_anim_count = 0;
-	if( img_count > 0 )
-	{
-		out->_flags |=
-			ShaderMask::MASK_TEXTURED
-			| ShaderMask::MASK_TEXTURED_DIF
-			| ShaderMask::MASK_TEXTURED_NOR
-			| ShaderMask::MASK_TEXTURED_SPE
-			;
-		std::unique_ptr< std::string[] > fnames( new std::string[ img_count ] );
-		ito( img_count )
-		{
-			int l;
-			stream->read( ( char* )&l , sizeof( int ) );
-			std::unique_ptr< char[] > fname( new char[ l + 1 ] );
-			stream->read( fname.get() , sizeof( char ) * l );
-			fname.get()[ l ] = '\0';
-			std::string respath( "res/view/images/" );
-			respath.append( std::string( fname.get() ) );
-			fnames[ i ] = std::move( std::string( respath ) );
-		}
-		out->_textures = std::move( loadImage( fnames.get() , img_count ) );
-	}
-	if( type != Polymesh::PolyMeshType::BONED_PMESH )
-	{
-		stream->close();
-		return std::move( out );
-	}
-	int anim_count;
-	stream->read( ( char * )&anim_count , sizeof( uint ) );
-	out->_anim_count = anim_count;
-	if( anim_count )
-	{
-		out->_flags |= ShaderMask::MASK_OWN_ANIMATED;
-		out->__mat4anim = std::move( loadAnimSetBin( stream , anim_count ) );
-
-	}
-	//LOG<<out->__mat4anim[0]._bone_count;
-	stream->close();
 	return std::move( out );
 }
 uint FileLoader::binarize( uint c )

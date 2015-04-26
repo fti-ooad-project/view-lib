@@ -39,7 +39,7 @@ TextureHolderGL::TextureHolderGL( std::unique_ptr< Image[] > &&imgs , int count 
 }
 void TextureHolderGL::init( std::unique_ptr< Image[] > &&imgs , int count )
 {
-	*this = std::move( TextureHolderGL( std::move( imgs ) , 1 ) );
+	*this = std::move( TextureHolderGL( std::move( imgs ) , count ) );
 	init();
 }
 void TextureHolderGL::init()

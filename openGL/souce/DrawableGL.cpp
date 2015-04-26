@@ -12,16 +12,17 @@ void PolyMeshGL::genInstancedBuffer( uint start , std::vector< uint > const &com
 	glBindBuffer( GL_ARRAY_BUFFER , _instanced_buf );
 	uint datasize = 0;
 	ito( comp.size() )
-		datasize += comp[ i ];
+		datasize += sizeof( float ) * comp[ i ];
 	for( int c = start; c < start + comp.size(); ++c )
-	{
 		glEnableVertexAttribArray( c );
-		glVertexAttribDivisor( c , 1 );
-	}
+	uint offset = 0;
 	ito( comp.size() )
 	{
-		glVertexAttribPointer( i , comp[ i ] , GL_FLOAT , GL_FALSE , datasize , reinterpret_cast< void* >( 0 ) );
+		glVertexAttribPointer( i + start , comp[ i ] , GL_FLOAT , GL_FALSE , datasize , reinterpret_cast< void* >( offset ) );
+		offset += comp[ i ] * sizeof( float );
 	}
+	for( int c = start; c < start + comp.size(); ++c )
+		glVertexAttribDivisor( c , 1 );
 	glBindBuffer( GL_ARRAY_BUFFER , 0 );
 	glBindVertexArray( 0 );
 }
@@ -29,6 +30,72 @@ void PolyMeshGL::draw() const
 {
 	glBindVertexArray( _vao );
 	glDrawElements( GL_TRIANGLES , _indx_count , GL_UNSIGNED_SHORT , 0 );
+}
+void PolyMeshGL::genVboFromMesh( std::unique_ptr< Polymesh > &&mesh )
+{
+	if( !mesh )
+		return;
+	if( isInited() )
+		return;
+	setInited( true );
+	glGenVertexArrays( 1 , &_vao );
+	glBindVertexArray( _vao );
+	uint vbo , ibo;
+	glGenBuffers( 1 , &vbo );
+	glBindBuffer( GL_ARRAY_BUFFER_ARB , vbo );
+	switch( mesh->_type )
+	{
+	case Polymesh::PolyMeshType::BONED_PMESH:
+	{
+		glBufferData( GL_ARRAY_BUFFER_ARB ,
+			mesh->_vertex_count * RVertexOffsets::Base , mesh->__vertices.get() ,
+			GL_STATIC_DRAW_ARB );
+		glEnableVertexAttribArray( 0 );
+		glEnableVertexAttribArray( 1 );
+		glEnableVertexAttribArray( 2 );
+		glEnableVertexAttribArray( 3 );
+		glEnableVertexAttribArray( 4 );
+		glEnableVertexAttribArray( 5 );
+		glEnableVertexAttribArray( 6 );
+		glVertexAttribPointer( 0 , 3 , GL_FLOAT , GL_FALSE , RVertexOffsets::Base , reinterpret_cast< void* >( 0 ) );
+		glVertexAttribPointer( 2 , 3 , GL_FLOAT , GL_FALSE , RVertexOffsets::Base , reinterpret_cast< void* >( RVertexOffsets::Normal ) );
+		glVertexAttribPointer( 3 , 3 , GL_FLOAT , GL_FALSE , RVertexOffsets::Base , reinterpret_cast< void* >( RVertexOffsets::BiNormal ) );
+		glVertexAttribPointer( 4 , 3 , GL_FLOAT , GL_FALSE , RVertexOffsets::Base , reinterpret_cast< void* >( RVertexOffsets::TangentNormal ) );
+		glVertexAttribPointer( 1 , 2 , GL_FLOAT , GL_FALSE , RVertexOffsets::Base , reinterpret_cast< void* >( RVertexOffsets::TextureCoordinate ) );
+		glVertexAttribPointer( 5 , 3 , GL_FLOAT , GL_FALSE , RVertexOffsets::Base , reinterpret_cast< void* >( RVertexOffsets::BoneWeights ) );
+		glVertexAttribPointer( 6 , 4 , GL_FLOAT , GL_FALSE , RVertexOffsets::Base , reinterpret_cast< void* >( RVertexOffsets::BoneIndex ) );
+	}
+	break;
+	case Polymesh::PolyMeshType::STATIC_PMESH:
+	{
+		glBufferData( GL_ARRAY_BUFFER_ARB ,
+			mesh->_vertex_count * RStaticVertexOffsets::Base , mesh->__vertices.get() ,
+			GL_STATIC_DRAW_ARB );
+		glEnableVertexAttribArray( 0 );
+		glEnableVertexAttribArray( 1 );
+		glEnableVertexAttribArray( 2 );
+		glEnableVertexAttribArray( 3 );
+		glEnableVertexAttribArray( 4 );
+		glVertexAttribPointer( 0 , 3 , GL_FLOAT , GL_FALSE , RStaticVertexOffsets::Base , reinterpret_cast< void* >( 0 ) );
+		glVertexAttribPointer( 2 , 3 , GL_FLOAT , GL_FALSE , RStaticVertexOffsets::Base , reinterpret_cast< void* >( RStaticVertexOffsets::Normal ) );
+		glVertexAttribPointer( 3 , 3 , GL_FLOAT , GL_FALSE , RStaticVertexOffsets::Base , reinterpret_cast< void* >( RStaticVertexOffsets::BiNormal ) );
+		glVertexAttribPointer( 4 , 3 , GL_FLOAT , GL_FALSE , RStaticVertexOffsets::Base , reinterpret_cast< void* >( RStaticVertexOffsets::TangentNormal ) );
+		glVertexAttribPointer( 1 , 2 , GL_FLOAT , GL_FALSE , RStaticVertexOffsets::Base , reinterpret_cast< void* >( RStaticVertexOffsets::TextureCoordinate ) );
+	}
+	break;
+	}
+	glGenBuffers( 1 , &ibo );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER_ARB , ibo );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER_ARB ,
+		3 * mesh->_face_count * sizeof( unsigned short ) ,
+		mesh->__indeces.get() , GL_STATIC_DRAW_ARB );
+	_indx_count = 3 * mesh->_face_count;
+	glBindVertexArray( 0 );
+	_size = mesh->_v3size;
+#ifdef RLOG
+	LOG << "_________________________\n" << "polymesh generated:vao:" << _vao << "\n";
+#endif
+	mesh.reset();
 }
 void PolyMeshGL::release()
 {

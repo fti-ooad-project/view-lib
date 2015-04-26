@@ -58,6 +58,14 @@ public:
 	{
 		return __data[ 2 ];
 	}
+	T &w()
+	{
+		return __data[ 3 ];
+	}
+	T const &w() const
+	{
+		return __data[ 3 ];
+	}
 	T const *getArray() const
 	{
 		return __data;
@@ -104,15 +112,43 @@ struct vec : public accessor< N , T >
 	{
 		//memset( this->__data , 0 , N * sizeof( T ) );
 	}
+	T const &operator[]( int i ) const
+	{
+		return this->__data[ i ];
+	}
+	T &operator[]( int i )
+	{
+		return this->__data[ i ];
+	}
 	vec( T d )
 	{
 		ito( N )
 			this->__data[ i ] = d;
 	}
+	vec( vec< N - 1 , T > const &v , T rest )
+	{
+		ito( N - 1 )
+			this->__data[ i ] = v.getValue( i );
+		this->__data[ N - 1 ] = rest;
+	}
+	template< int H >
+	vec( vec< H , T > const &v1 , vec< N - H , T > const &v2 )
+	{
+		ito( H )
+			this->__data[ i ] = v1.getValue( i );
+		ito( N - H )
+			this->__data[ i + H ] = v2.getValue( i );
+	}
 	vec( vec< N , T > const &v )
 	{
 		ito( N )
 			this->getValue( i ) = v.getValue( i );
+	}
+	template< typename P >
+	vec( vec< N , P > const &v )
+	{
+		ito( N )
+			this->getValue( i ) = static_cast< T >( v.getValue( i ) );
 	}
 	template< typename P >
 	void operator=( vec< N , P > const &v )
@@ -275,7 +311,19 @@ struct vec : public accessor< N , T >
 		{
 			return *this * -1.0f;
 		}
+		vec< 2 , T > xy() const
+		{
+			return vec< 2 , T >( x() , y() );
+		}
 };
+template< int N , typename T >
+bool isIn( vec< N , T > const &a , vec< N , T > const &b , vec< N , T > const &c )
+{
+	ito( N )
+		if( fabsf( a[ i ] - b[ i ] ) > c[i] )
+			return false;
+	return true;
+}
 template< int N , typename T >
 vec< N , T > operator*( float k , vec< N , T > const &v )
 {

@@ -57,7 +57,8 @@ public:
 	f3 _look;
 	f3 _up;
 	bool _auto_height;
-	int selectid;
+	mutable int selectid = 0;
+	mutable f3 _size;
 	mutable AnimationMixer _animstat;
 };
 struct LightState

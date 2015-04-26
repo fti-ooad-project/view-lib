@@ -1,10 +1,14 @@
 #include <openGL/WindowGL.h>
 #include <GL/glew.h>
 #include <SDL2/SDL_opengl.h>
-void WindowGL::init( FrameFunc func , ReleaseFunc relf , Eventer *eventer )
+bool vsinc;
+std::string name;
+void WindowGL::init( FrameFunc func , ReleaseFunc relf , Eventer *eventer , bool vsinc , std::string name )
 {
 	if( isInited() )
 		return;
+	::name = name;
+	::vsinc = vsinc;
 	_screen_width = 512;
 	_screen_height = 512;
 	_mwheel = 0.0f;
@@ -32,7 +36,7 @@ void WindowGL::run()
 	int err;
 	err = SDL_Init( SDL_INIT_EVERYTHING );
 	SDL_GLContext maincontext;
-	mainwindow = SDL_CreateWindow( "PROGRAM_NAME" , SDL_WINDOWPOS_CENTERED , SDL_WINDOWPOS_CENTERED , 512 , 512 , SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
+	mainwindow = SDL_CreateWindow( name.c_str() , SDL_WINDOWPOS_CENTERED , SDL_WINDOWPOS_CENTERED , 512 , 512 , SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
 	maincontext = SDL_GL_CreateContext( mainwindow );
 	glewExperimental = GL_TRUE;
 	std::cout << "glew init:" << glewInit() << "\n";
@@ -48,7 +52,10 @@ void WindowGL::run()
 	glEnable( GL_DEPTH_TEST );
 	glDepthFunc( GL_LEQUAL );
 	glPatchParameteri( GL_PATCH_VERTICES , 3 );
-	SDL_GL_SetSwapInterval( 0 );
+	if( vsinc )
+		SDL_GL_SetSwapInterval( 1 );
+	else
+		SDL_GL_SetSwapInterval( 0 );
 	glDisable( GL_BLEND );
 	while( _working )
 	{

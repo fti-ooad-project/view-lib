@@ -118,4 +118,19 @@ Matrix< T , N , M > operator*( const Matrix< T , N , M > &a , float b )
 			out( i , j ) = a( i , j ) * b;
 	return out;
 }
+template< typename T , int N >
+Matrix< T , 1 , N > make_matrix( vec< N , T > const v )
+{
+	Matrix< T , 1 , N > out;
+	out.row( 0 ) = v;
+	return out;
+}
+template< typename T , int N , int M >
+vec< M , T > operator*( vec< N , T > const &v , Matrix< T , N , M > const &m )
+{
+	vec< M , T > out;
+	ito( M )
+		out.getValue( i ) = v * m.collumn( i );
+	return out;
+}
 #endif

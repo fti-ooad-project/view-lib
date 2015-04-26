@@ -23,7 +23,7 @@ protected:
 	ReleaseFunc _relf;
 	Eventer *_eventer;
 public:
-	void init( FrameFunc  , ReleaseFunc  , Eventer * );
+	void init( FrameFunc  , ReleaseFunc  , Eventer * , bool , std::string );
 	void release() override;
 	~WindowGL() override;
 public:
