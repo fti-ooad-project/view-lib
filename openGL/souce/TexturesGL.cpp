@@ -1,6 +1,15 @@
 #include <openGL\TexturesGL.h>
 #include <openGL\GLincludes.h>
 #include <view\PassDesc.h>
+void TextureHolderGL::bind( uint tid , uint uid ) const
+{
+	glActiveTexture( GL_TEXTURE0 + tid );
+	if( _count == 1 )
+		glBindTexture( GL_TEXTURE_2D , _texture_array_pointer );
+	else
+		glBindTexture( GL_TEXTURE_2D_ARRAY , _texture_array_pointer );
+	glUniform1i( uid , tid );
+}
 uint TextureHolderGL::getCount() const
 {
 	return _count;
