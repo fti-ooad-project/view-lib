@@ -1,9 +1,7 @@
 #ifndef VEC_H
 #define VEC_H
 #include "cuda_runtime.h"
-#define DEVICE __device__
-#define GLOBAL __global__
-#define LOCAL __host__
+#include <cudalib\cudaUtil.h>
 #ifndef ito
 #define ito( x ) for( int i = 0; i < x; i++ )
 #endif
@@ -136,6 +134,20 @@ struct vec : public accessor < N , T >
 	{
 		ito( N )
 			this->getValue( i ) = static_cast< T >( v.getValue( i ) );
+	}
+	DEVICE vec( vec< N - 1 , T > const &v , T rest )
+	{
+		ito( N - 1 )
+			this->__data[ i ] = v.getValue( i );
+		this->__data[ N - 1 ] = rest;
+	}
+	template< int H >
+	DEVICE vec( vec< H , T > const &v1 , vec< N - H , T > const &v2 )
+	{
+		ito( H )
+			this->__data[ i ] = v1.getValue( i );
+		ito( N - H )
+			this->__data[ i + H ] = v2.getValue( i );
 	}
 	template< typename ...D >
 	DEVICE  vec( D ...arg )

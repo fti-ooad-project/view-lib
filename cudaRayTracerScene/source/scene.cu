@@ -67,7 +67,7 @@
 	}
 	return out;
 }*/
-DEVICE void Scene::traceRayQueued( QueueRay const &qray , RayQueue *rqueue , unsigned int rand_seed , unsigned int SAMPLES_COUNT ) const
+DEVICE void Scene::traceRayQueued( QueueRay const &qray , QueueRay *rqueue , QueuePixel * pqueue , int index , int SAMPLES_COUNT ) const
 {
 	Collision col;
 	Material mat;
@@ -90,12 +90,14 @@ DEVICE void Scene::traceRayQueued( QueueRay const &qray , RayQueue *rqueue , uns
 		}
 		if( !success )
 		{
-			rqueue->writePixel( qray._color_k & ( f3( 0.2f , 0.23f , 0.46f ) + qray._v.z() * f3( 1.9f , 1.6f , 1.5f ) ) , qray._dir_pixel );
+			pqueue[ index ] = { qray._target_pixel , qray._color_k & ( f3( 0.2f , 0.23f , 0.46f ) + qray._v.z() * f3( 1.9f , 1.6f , 1.5f ) ) };
+			//rqueue->writePixel( qray._color_k & ( f3( 0.2f , 0.23f , 0.46f ) + qray._v.z() * f3( 1.9f , 1.6f , 1.5f ) ) , qray._dir_pixel );
 			return;
 		}
 		if( mat._emit )
 		{
-			rqueue->writePixel( qray._color_k & mat._color , qray._dir_pixel );
+			pqueue[ index ] = { qray._target_pixel , qray._color_k & mat._color };
+			//rqueue->writePixel( qray._color_k & mat._color , qray._dir_pixel );
 			return;
 		}
 	}
@@ -103,16 +105,17 @@ DEVICE void Scene::traceRayQueued( QueueRay const &qray , RayQueue *rqueue , uns
 	{
 		QueueRay temp_ray;
 		temp_ray._pos = col._pos;
-		temp_ray._dir_pixel = qray._dir_pixel;
+		temp_ray._target_pixel = qray._target_pixel;
+		temp_ray._have_value = 1;
 		f3 refl( 0.0f );
 		if( mat._transperency < 1.0f )
 		{
 			temp_ray._color_k = qray._color_k & ( mat._color * ( 1.0f - mat._transperency ) );
 			for( int i = 0; i < SAMPLES_COUNT; i++ )
 			{
-				f3 v = VectorFactory::getDiffuseReflected( qray._v , col._n , mat._spec , rand_seed );
+				f3 v = VectorFactory::getDiffuseReflected( qray._v , col._n , mat._spec , index );
 				temp_ray._v = v;
-				rqueue->add( temp_ray );
+				rqueue[ index * SAMPLES_COUNT + i ] = temp_ray;
 			}
 		}
 		f3 refr( 0.0f );
@@ -126,9 +129,9 @@ DEVICE void Scene::traceRayQueued( QueueRay const &qray , RayQueue *rqueue , uns
 				kn = mat._n;
 			for( int i = 0; i < SAMPLES_COUNT; i++ )
 			{
-				f3 v = VectorFactory::getDiffuseRefracted( qray._v , col._n , mat._spec , kn , rand_seed );
+				f3 v = VectorFactory::getDiffuseRefracted( qray._v , col._n , mat._spec , kn , index );
 				temp_ray._v = v;
-				rqueue->add( temp_ray );
+				rqueue[ index * SAMPLES_COUNT + SAMPLES_COUNT + i ] = temp_ray;
 			}
 		}
 	}
@@ -175,33 +178,4 @@ DEVICE bool InfPlane::getCollision( Ray const &ray , Collision &out ) const
 		out._n = -_n;
 	out._inside = false;
 	return true;
-}
-DEVICE void RayQueue::add( QueueRay const &qray )
-{
-	if( _pos < _array_size )
-	{
-		int i = atomicAdd( &_pos , 1 );
-		if( i < _array_size )
-		{
-			_array[ i ] = qray;
-		} else
-		{
-			atomicAdd( &_pos , -1 );
-		}
-	}
-}
-DEVICE unsigned int RayQueue::getSize() const
-{
-	return _pos;
-}
-DEVICE void RayQueue::writePixel( f3 const &pix , unsigned int indx )
-{
-	atomicAdd( ( float* )( _screen + indx ) , pix.x() );
-	atomicAdd( ( float* )( _screen + indx  ) + 1 , pix.y() );
-	atomicAdd( ( float* )( _screen + indx ) + 2 , pix.z() );
-	atomicAdd( ( float* )( _screen + indx  ) + 3 , 1.0f );
-}
-DEVICE void RayQueue::empty()
-{
-	_pos = 0;
 }
