@@ -87,6 +87,6 @@ public:
 public:
 	//DEVICE void addObj( Object* );
 	//DEVICE f3 traceRay( Ray const & , int , unsigned int , unsigned int ) const;
-	DEVICE void traceRayQueued( QueueRay const & , QueueRay * , QueuePixel * , int , int ) const;
+	DEVICE QueuePixel traceRayQueued(QueueRay const &, QueueRay *, int, int) const;
 };
 #endif
