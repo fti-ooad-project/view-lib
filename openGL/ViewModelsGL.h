@@ -21,7 +21,8 @@ class GraphicProgrammGL
 private:
 	uint _vertex_program , _fragment_program , _m_program = 0 , _geometric_program = 0 , _tess_program = 0 , _tess_est_program = 0;
 public:
-	void init(std::string frag_file, std::string vert_file, std::string geom_file = "", std::string tess_file = "", std::string tessest_file = "");
+	void init( std::string frag_file , std::string vert_file , std::string geom_file = "" , std::string tess_file = "" , std::string tessest_file = "" );
+	void initDirect( std::string frag_file , std::string vert_file , std::string geom_file = "" , std::string tess_file = "" , std::string tessest_file = "" );
 	//inline void bind(RShaderInput &in);
 	void bind();
 	void release();

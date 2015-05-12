@@ -172,7 +172,7 @@ struct vec : public accessor< N , T >
 		void mul( float k )
 		{
 			for( int i = 0; i < N; i++ )
-				this->getValue() *= k;
+				this->getValue( i ) *= k;
 		}
 		vec< N , T > g_mul( float k ) const
 		{
@@ -298,6 +298,11 @@ struct vec : public accessor< N , T >
 			if( sgn < 0.0f )
 				scl = -scl;
 			return scl;
+		}
+		void operator*=( float k )
+		{
+			for( int i = 0; i < N; i++ )
+				this->getValue( i ) *= k;
 		}
 		void operator+=( vec< N , T > const &v )
 		{

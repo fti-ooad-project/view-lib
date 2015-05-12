@@ -1,4 +1,4 @@
-#include <cudalinalg/vec.h>
+#include <cudalinalg/VectorFactory.h>
 #include<curand_kernel.h>
 DEVICE float PI;
 //#define RAND_COUNT 0x1000
@@ -6,16 +6,6 @@ DEVICE float PI;
 //__device__ float randf[ RAND_COUNT ];
 DEVICE curandState randstate[ RANDSTATE_COUNT ];
 //__device__ unsigned int cur_rand;
-DEVICE float c_wrap( float x , float min , float max )
-{
-	if( x > max ) return max;
-	if( x < min ) return min;
-	return x;
-}
-DEVICE float c_sqr( float i )
-{
-	return i * i;
-}
 GLOBAL void devInit()
 {
 	PI = acosf( -1.0f );
@@ -43,44 +33,44 @@ DEVICE float VectorFactory::getPI()
 {
 	return PI;
 }
-DEVICE f3 VectorFactory::getRandomHalfSphere( unsigned int seed )
+DEVICE df3 VectorFactory::getRandomHalfSphere( unsigned int seed )
 {
 	float phi = getRandom( seed ) * PI * 2.0f;
 	float cp = cosf( phi );
 	float sp = sinf( phi );
 	float ct = getRandom( seed );
 	float st = sqrtf( 1.0f - ct * ct );
-	return f3( st * cp , st * sp , ct );
+	return df3( st * cp , st * sp , ct );
 }
-DEVICE f3 VectorFactory::getRandomCosHalfSphere( unsigned int seed )
+DEVICE df3 VectorFactory::getRandomCosHalfSphere( unsigned int seed )
 {
 	float phi = getRandom( seed ) * PI * 2.0f;
 	float cp = cosf( phi );
 	float sp = sinf( phi );
 	float ct = cosf( getRandom( seed ) * PI * 0.5f );
 	float st = sqrtf( 1.0f - ct * ct );
-	return f3( st * cp , st * sp , ct );
+	return df3( st * cp , st * sp , ct );
 }
-DEVICE f3 VectorFactory::getRandomSphere( unsigned int seed )
+DEVICE df3 VectorFactory::getRandomSphere( unsigned int seed )
 {
 	float phi = getRandom( seed ) * PI * 2.0f;
 	float cp = cosf( phi );
 	float sp = sinf( phi );
 	float ct = -1.0f + 2.0f * getRandom( seed );
 	float st = sqrtf( 1.0f - ct * ct );
-	return f3( st * cp , st * sp , ct );
+	return df3( st * cp , st * sp , ct );
 }
-DEVICE f2 VectorFactory::getRandomCircle( unsigned int seed )
+DEVICE df2 VectorFactory::getRandomCircle( unsigned int seed )
 {
 	float phi = getRandom( seed ) * PI * 2.0f;
 	float r = powf( getRandom( seed ) , 0.5f );
-	return f2( cos( phi ) , sin( phi ) ) * r;
+	return df2( cos( phi ) , sin( phi ) ) * r;
 }
-DEVICE f3 VectorFactory::getReflected( f3 const &v , f3 const &n )
+DEVICE df3 VectorFactory::getReflected( df3 const &v , df3 const &n )
 {
 	return v - 2.0f * n * ( n * v );
 }
-DEVICE f3 VectorFactory::getRefracted( f3 const &v , f3 const &n , float kn )
+DEVICE df3 VectorFactory::getRefracted( df3 const &v , df3 const &n , float kn )
 {
 	float cosa = -v * n;
 	float sina2 = 1.0f - cosa * cosa;
@@ -90,23 +80,23 @@ DEVICE f3 VectorFactory::getRefracted( f3 const &v , f3 const &n , float kn )
 	float cosb = sqrtf( 1.0f - sinb2 );
 	return n * ( -cosb + cosa * kn ) + v * kn;
 }
-DEVICE f3 VectorFactory::getDiffuseReflected( f3 const &v , f3 const &n , float spec , unsigned int seed )
+DEVICE df3 VectorFactory::getDiffuseReflected( df3 const &v , df3 const &n , float spec , unsigned int seed )
 {
-	f3 locx = vecx( v , n ).g_norm();
-	f3 locy = vecx( locx , n );
-	f3 kvec = getRandomCosHalfSphere( seed );
-	f3 rand_vec = n * kvec.z() + locx * kvec.x() + locy * kvec.y();
-	f3 refl = getReflected( v , n );
-	f3 out = ( refl * spec + rand_vec * ( 1.0 - spec ) ).g_norm();
+	df3 locx = vecx( v , n ).g_norm();
+	df3 locy = vecx( locx , n );
+	df3 kvec = getRandomCosHalfSphere( seed );
+	df3 rand_vec = n * kvec.z() + locx * kvec.x() + locy * kvec.y();
+	df3 refl = getReflected( v , n );
+	df3 out = ( refl * spec + rand_vec * ( 1.0 - spec ) ).g_norm();
 	return out;
 }
-DEVICE f3 VectorFactory::getDiffuseRefracted( f3 const &v , f3 const &n , float spec , float kn , unsigned int seed )
+DEVICE df3 VectorFactory::getDiffuseRefracted( df3 const &v , df3 const &n , float spec , float kn , unsigned int seed )
 {
-	f3 locx = vecx( v , n ).g_norm();
-	f3 locy = vecx( locx , n );
-	f3 kvec = getRandomCosHalfSphere( seed );
-	f3 rand_vec = n * kvec.z() + locx * kvec.x() + locy * kvec.y();
-	f3 refl = getRefracted( v , n , kn );
-	f3 out = ( refl * spec + rand_vec * ( 1.0 - spec ) ).g_norm();
+	df3 locx = vecx( v , n ).g_norm();
+	df3 locy = vecx( locx , n );
+	df3 kvec = getRandomCosHalfSphere( seed );
+	df3 rand_vec = n * kvec.z() + locx * kvec.x() + locy * kvec.y();
+	df3 refl = getRefracted( v , n , kn );
+	df3 out = ( refl * spec + rand_vec * ( 1.0 - spec ) ).g_norm();
 	return out;
 }

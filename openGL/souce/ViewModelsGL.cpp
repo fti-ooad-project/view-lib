@@ -2,17 +2,36 @@
 #include <openGL\GLincludes.h>
 void GraphicProgrammGL::init( std::string frag_file , std::string vert_file , std::string geom_file , std::string tess_file , std::string tessest_file )
 {
-#ifdef RLOG
-	LOG << "_________________________\n" << frag_file << "_\n" << vert_file << "_\n" << geom_file << "_\n" << tess_file << "_\n" << tessest_file << "_\nis processed\n";
-#endif
+	std::string fsrc = FileParser::genParsed( frag_file );
+	std::string vsrc = FileParser::genParsed( vert_file );
+	std::string gsrc = "";
+	std::string tsrc = "";
+	std::string tesrc = "";
+	if( geom_file.size() > 1 ) gsrc = FileParser::genParsed( geom_file );
+	if( tess_file.size() > 1 ) tsrc = FileParser::genParsed( tess_file );
+	if( tessest_file.size() > 1 ) tesrc = FileParser::genParsed( tessest_file );
+	initDirect( fsrc , vsrc , gsrc , tsrc , tesrc );
+}
+/*void RGraphicProgrammGL::bind(RShaderInput &in)
+{
+	glUseProgram(_m_program);
+	uint tc = 0;///five becouse polymeshes bind textures from 0 to 5( diffuse, spec , normals... )
+	for (uint i = 0; i < RShaderInput::MAX_INPUT; ++i)
+	{
+		if (in._loaded[i]) continue;
+		in._loaded[i] = true;
+		setUniform(in.__tuple[i], in.__id[i], tc);
+	}
+}*/
+void GraphicProgrammGL::initDirect( std::string frag_file , std::string vert_file , std::string geom_file , std::string tess_file , std::string tessest_file )
+{
 	try
 	{
-		auto proc = [ ]( uint type , std::string const &raw )
+		auto proc = []( uint type , std::string const &raw )
 		{
 			int out = glCreateShader( type );
-			std::string src = FileParser::genParsed( raw );
-			GLint l = src.length();
-			char const *temp = src.c_str();
+			GLint l = raw.length();
+			char const *temp = raw.c_str();
 			glShaderSource( out , 1 , &temp , &l );
 			glCompileShader( out );
 			GLint compiled;
@@ -23,7 +42,7 @@ void GraphicProgrammGL::init( std::string frag_file , std::string vert_file , st
 				glGetShaderiv( out , GL_INFO_LOG_LENGTH , &length );
 				std::string log( length , ' ' );
 				glGetShaderInfoLog( out , length , &length , &log[ 0 ] );
-				std::stringstream temp( src );
+				std::stringstream temp( raw );
 				std::string t;
 				int i = 1;
 				while( std::getline( temp , t ) )
@@ -56,33 +75,18 @@ void GraphicProgrammGL::init( std::string frag_file , std::string vert_file , st
 			glGetProgramiv( _m_program , GL_INFO_LOG_LENGTH , &length );
 			std::string log( length , ' ' );
 			glGetProgramInfoLog( _m_program , length , &length , &log[ 0 ] );
-//#ifdef RLOG
+			//#ifdef RLOG
 			LOG << "shader link error: " << log << "\n";
-//#endif
+			//#endif
 			throw std::logic_error( "shader linkage error" );
 			return;
 		}
-#ifdef RLOG
-		LOG << "have been processed\n_______\n";
-#endif
 	}
 	catch( std::logic_error &err )
 	{
 		LOG << "shader compile exception: " << err.what() << "\n";
-		//getchar();
 	}
 }
-/*void RGraphicProgrammGL::bind(RShaderInput &in)
-{
-	glUseProgram(_m_program);
-	uint tc = 0;///five becouse polymeshes bind textures from 0 to 5( diffuse, spec , normals... )
-	for (uint i = 0; i < RShaderInput::MAX_INPUT; ++i)
-	{
-		if (in._loaded[i]) continue;
-		in._loaded[i] = true;
-		setUniform(in.__tuple[i], in.__id[i], tc);
-	}
-}*/
 void GraphicProgrammGL::bind()
 {
 	glUseProgram( _m_program );

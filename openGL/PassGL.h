@@ -16,6 +16,8 @@ public:
 	uint getBufferCount();
 	void clear(bool cd = true);
 	void bind() const;
+	void bind( uint , uint , uint ) const;
+	void bindDepth( uint , uint ) const;
 	uint getDepthBufferPtr() const;
 	void release() override;
 	void update(const Size &);

@@ -1,6 +1,6 @@
 #include <openGL\Blurer.h>
 #include <openGL\GLincludes.h>
-uint Blurer::process( uint buffid , float radius )
+DrawPassGL const &Blurer::process( uint buffid , float radius )
 {
 	_process_prog.bind();
 	_process_pass.clear();
@@ -16,7 +16,7 @@ uint Blurer::process( uint buffid , float radius )
 	glUniform1i( 0 , 0 );
 	glUniform2f( 1 , 1.0f , 0.0f );
 	_screen_quad.draw();
-	return _process_pass.getBufferPtr( 0 );
+	return _process_pass;
 }
 /*Blurer *Blurer::getSingleton()
 {

@@ -11,7 +11,7 @@ private:
 	PolyQuadGL _screen_quad;
 public:
 	Blurer() = default;
-	uint process( uint , float );
+	DrawPassGL const &process( uint , float );
 	//static Blurer *getSingleton();
 	void init() override;
 	void release() override;

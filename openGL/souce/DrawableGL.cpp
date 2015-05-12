@@ -207,3 +207,48 @@ PolyBoxGL::~PolyBoxGL()
 {
 	release();
 }
+void ScreenQuadGL::init()
+{
+	if( isInited() )
+		return;
+	setInited( true );
+	static const float quad[] =
+	{
+		-1.0f , -1.0f , 0.0f , 0.0f , 1.0f , 0.0f , 0.0f , 1.0f , /*bn*/1.0f , 0.0f , 0.0f , /*tn*/0.0f , 1.0f , 0.0f ,
+		1.0f , -1.0f , 0.0f , 1.0f , 1.0f , 0.0f , 0.0f , 1.0f , /*bn*/1.0f , 0.0f , 0.0f , /*tn*/0.0f , 1.0f , 0.0f ,
+		1.0f , 1.0f , 0.0f , 1.0f , 0.0f , 0.0f , 0.0f , 1.0f , /*bn*/1.0f , 0.0f , 0.0f , /*tn*/0.0f , 1.0f , 0.0f ,
+		-1.0f , 1.0f , 0.0f , 0.0f , 0.0f , 0.0f , 0.0f , 1.0f , /*bn*/1.0f , 0.0f , 0.0f , /*tn*/0.0f , 1.0f , 0.0f
+	};
+	static const ushort indx[] =
+	{
+		0 , 1 , 2 , 0 , 2 , 3
+	};
+	glGenVertexArrays( 1 , &_vao );
+	glBindVertexArray( _vao );
+	uint vbo , ibo;
+	glGenBuffers( 1 , &vbo );
+	glBindBuffer( GL_ARRAY_BUFFER_ARB , vbo );
+	glBufferData( GL_ARRAY_BUFFER_ARB , 224 , quad , GL_STATIC_DRAW_ARB );
+	glEnableVertexAttribArray( 0 );
+	glEnableVertexAttribArray( 1 );
+	glEnableVertexAttribArray( 2 );
+	glEnableVertexAttribArray( 3 );
+	glEnableVertexAttribArray( 4 );
+	glVertexAttribPointer( 0 , 3 , GL_FLOAT , GL_FALSE , 56 , reinterpret_cast< void* >( 0 ) );
+	glVertexAttribPointer( 1 , 2 , GL_FLOAT , GL_FALSE , 56 , reinterpret_cast< void* >( 12 ) );
+	glVertexAttribPointer( 2 , 3 , GL_FLOAT , GL_FALSE , 56 , reinterpret_cast< void* >( 20 ) );
+	glVertexAttribPointer( 3 , 3 , GL_FLOAT , GL_FALSE , 56 , reinterpret_cast< void* >( 32 ) );
+	glVertexAttribPointer( 4 , 3 , GL_FLOAT , GL_FALSE , 56 , reinterpret_cast< void* >( 44 ) );
+	glGenBuffers( 1 , &ibo );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER_ARB , ibo );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER_ARB , 12 , indx , GL_STATIC_DRAW_ARB );
+	glBindVertexArray( 0 );
+	glDeleteBuffers( 1 , &vbo );
+	glDeleteBuffers( 1 , &ibo );
+	_indx_count = 6;
+}
+ScreenQuadGL * ScreenQuadGL::getSingleton()
+{
+	static ScreenQuadGL *sngl = new ScreenQuadGL();
+	return sngl;
+}

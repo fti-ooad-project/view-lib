@@ -19,15 +19,22 @@ public:
 	void genInstancedBuffer( uint , std::vector< uint > const & );
 	void genVboFromMesh( std::unique_ptr< Polymesh > && );
 	void draw() const;
-	void release();
+	void release() override;
 	void drawInstanced( void const * , uint , uint ) const;
 	void drawInstancedPatches( void const * , uint , uint ) const;
 };
 struct PolyQuadGL : public PolyMeshGL
 {
 	void init() override;
-	static PolyQuadGL* getSingleton();
 	~PolyQuadGL();
+};
+class ScreenQuadGL : public PolyMeshGL
+{
+private:
+	ScreenQuadGL() = default;
+public:
+	static ScreenQuadGL *getSingleton();
+	void init() override;
 };
 struct PolyBoxGL : public PolyMeshGL
 {

@@ -11,6 +11,7 @@
 #define MARK printf( "mark\n" );
 typedef unsigned int uint;
 typedef unsigned short ushort;
+typedef unsigned char uchar;
 #define MAX_KEY 0x100
 #define MIN( x , y ) x < y ? x : y
 #define ifor( i , x , y ) for( int i = x; i < y; ++i )

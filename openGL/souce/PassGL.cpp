@@ -246,6 +246,18 @@ void DrawPassGL::bind() const
 	glBindFramebuffer( GL_FRAMEBUFFER , _framebuffer_id );
 	glViewport( 0 , 0 , _desc._size._w , _desc._size._h );
 }
+void DrawPassGL::bind( uint loc , uint tc , uint i ) const
+{
+	glActiveTexture( GL_TEXTURE0 + tc );
+	glBindTexture( GL_TEXTURE_2D , __texture_pointer_array[ i ] );
+	glUniform1i( loc , tc );
+}
+void DrawPassGL::bindDepth( uint loc , uint tc ) const
+{
+	glActiveTexture( GL_TEXTURE0 + tc );
+	glBindTexture( GL_TEXTURE_2D , _depth_buffer_pointer );
+	glUniform1i( loc , tc );
+}
 uint DrawPassGL::getDepthBufferPtr() const
 {
 	return _depth_buffer_pointer;
