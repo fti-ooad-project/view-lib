@@ -1,6 +1,7 @@
 #include <cudalinalg\cudaMatrixSolver.h>
 #include "device_launch_parameters.h"
 #include <cudalinalg\vec.h>
+#include <iomanip>
 #define getValue( i , j ) mat[ i * mat_size + j ]
 __global__ void dev_triangulate( float *mat , int mat_size , int n )
 {
@@ -29,7 +30,7 @@ __global__ void dev_calcNullRow( float *mat , int mat_size , int *outv )
 			float v = getValue( i , k );
 			sum += v * v;
 		}
-		if( sum < 0.000001f )
+		if( sum < 0.0001f )
 			*outv = i;
 	}
 }
@@ -51,9 +52,17 @@ __global__ void dev_shiftY( float *out_mat , float *mat , int mat_size , int zer
 		}
 	}
 }
+__global__ void dev_subKernelValue( float *mat , int mat_size , float value )
+{
+	int j = blockDim.x * blockIdx.x + threadIdx.x;
+	if( j < mat_size )
+	{
+		mat[ j * mat_size + j ] -= value;
+	}
+}
 CudaMatrixSolver *CudaMatrixSolver::getSingleton()
 {
-	static cudaMatrixSolver *sngl = new cudaMatrixSolver();
+	static CudaMatrixSolver *sngl = new CudaMatrixSolver();
 	return sngl;
 }
 void CudaMatrixSolver::makeSpace( int size )
@@ -73,8 +82,21 @@ void CudaMatrixSolver::init()
 	_host_buffer = malloc( _buffer_size );
 	cudaMalloc( &_dev_buffer , _buffer_size );
 }
+#define printMatrix( mat )\
+{\
+	cudaMemcpy( _host_buffer , mat , byte_size , cudaMemcpyDeviceToHost );\
+	float *local_mat = ( float* )_host_buffer;\
+	for( int i = 0; i < matrix_size; i ++ )\
+		{\
+		for( int j = 0; j < matrix_size; j++ )\
+				{\
+			std::cout << std::setw( 2 ) << local_mat[ i * matrix_size + j ] << " ";\
+				}\
+		std::cout << "\n";\
+	}\
+}
 /*return true if kernel value is match and false if not*/
-bool CudaMatrixSolver::calcKernelVector( float const * in_matrix , float in_kernel_value , int matrix_size , float * out_kernel_vector )
+bool CudaMatrixSolver::calcKernelVector( float const * in_matrix , float kernel_value , int matrix_size , float * out_kernel_vector )
 {
 	int byte_size = matrix_size * matrix_size * sizeof( float );
 	if( 2 * byte_size > _buffer_size )
@@ -84,6 +106,7 @@ bool CudaMatrixSolver::calcKernelVector( float const * in_matrix , float in_kern
 	float *dev_mat = ( float* )_dev_buffer;
 	cudaMemcpy( dev_mat , in_matrix , byte_size , cudaMemcpyHostToDevice );
 	dim3 block_size = dim3( matrix_size / 32 + 1 , matrix_size / 32 + 1 );
+	dev_subKernelValue<<< block_size.x , 32 >>>( dev_mat , matrix_size , kernel_value );
 	for( int n = 0; n < matrix_size; n++ )
 	{
 		dev_triangulate<<< block_size , dim3( 32 , 32 ) >>>( dev_mat , matrix_size , n );
@@ -99,6 +122,7 @@ bool CudaMatrixSolver::calcKernelVector( float const * in_matrix , float in_kern
 		cudaMemcpy( &zerorow , dev_zerorow , sizeof( int ) , cudaMemcpyDeviceToHost );
 		cudaFree( dev_zerorow );
 	}
+	printMatrix( dev_mat );
 	if( zerorow < 0 )
 	{
 		return false;
@@ -124,4 +148,6 @@ void CudaMatrixSolver::release()
 {
 	if( !isInited() ) return;
 	setInited( false );
+	free( _host_buffer );
+	cudaFree( _dev_buffer );
 }

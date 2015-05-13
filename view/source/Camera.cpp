@@ -123,7 +123,7 @@ void Camera::genCubeCamera( f4x4 *out , const f3 &pos )
 }
 f3 Camera::getCameraRay( f2 const &k ) const
 {
-	return ( _v3local_z + _v3local_x * k.x() * tan( _fovx * 0.5f ) + _v3local_y * k.y() * tan( _fovy * 0.5f ) ).g_norm();
+	return ( _v3local_z + _v3local_x * k.x() * tanf( _fovx * 0.5f ) + _v3local_y * k.y() * tanf( _fovy * 0.5f ) );
 }
 bool Camera::fristrum( f3 const &p , float size ) const
 {

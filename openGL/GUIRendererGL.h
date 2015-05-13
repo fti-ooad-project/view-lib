@@ -324,10 +324,15 @@ private:
 		glDisable( GL_BLEND );
 		glEnable( GL_DEPTH_TEST );
 	}
+	GUIRendererGL() = default;
 public:
 	GUIRendererGL( const GUIRendererGL & ) = delete;
 	void operator=( const GUIRendererGL & ) = delete;
-	GUIRendererGL() = default;
+	static GUIRendererGL *getSingleton()
+	{
+		static GUIRendererGL *sngl = new GUIRendererGL();
+		return sngl;
+	}
 	void init()
 	{
 		if( isInited() ) return;
