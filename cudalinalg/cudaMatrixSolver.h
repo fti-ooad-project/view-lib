@@ -11,8 +11,10 @@ public:
 	static CudaMatrixSolver *getSingleton();
 	/*take some memory on host and device*/
 	void init();
-	/*return true if kernel value is match and false if not*/
-	bool calcKernelVector( float const * $in_matrix , float $in_kernel_value , int $matrix_size , float * $out_kernel_vector );
+	/**/
+	void calcKernelVector( float const * in_matrix , float in_kernel_value , int matrix_size , float * out_kernel_vector );
+	/*return matrix - k * I determinant*/
+	float calcMatrixDet2M( float const *in_matrix , int matrix_size , float kernel_value );
 	/*free memory on host and device*/
 	void release() override;
 };
