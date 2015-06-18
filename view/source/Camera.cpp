@@ -48,7 +48,7 @@ void Camera::pos( const f3 &pos )
 void Camera::angle( const float phi , const float theta )
 {
 	//_v3rotation += f3( phi , theta , 0.0f );
-	_v3local_z = f3( sin( theta ) * cos( phi ) , sin( theta ) * sin( phi ) , cos( theta ) );
+	_v3local_z = f3( sinf( theta ) * cosf( phi ) , sinf( theta ) * sinf( phi ) , cosf( theta ) );
 	_v3local_x = vecx( _v3local_z , f3( 0.0f , 0.0f , 1.0f ) ).g_norm();
 	_v3local_y = vecx( _v3local_x , _v3local_z );
 	this->pushChange();

@@ -11,12 +11,12 @@ class PolyMeshGL : public Initable
 protected:
 	uint _vao;
 	int _indx_count;
-	uint _instanced_buf;
+	uint _instanced_buf = 0;
 public:
 	f3 _size = f3( 1.0f , 1.0f , 1.0f );
 	void init(){}
 	bool isInstanced() const;
-	void genInstancedBuffer( uint , std::vector< uint > const & );
+	void genInstancedBuffer( int , std::vector< int > const & );
 	void genVboFromMesh( std::unique_ptr< Polymesh > && );
 	void draw() const;
 	void release() override;
@@ -40,5 +40,10 @@ struct PolyBoxGL : public PolyMeshGL
 {
 	void init() override;
 	~PolyBoxGL();
+};
+struct PolySphereGL : public PolyMeshGL
+{
+	void init( int n );
+	~PolySphereGL();
 };
 #endif // RDRAWABLEGL_H

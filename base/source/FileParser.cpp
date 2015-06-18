@@ -68,8 +68,14 @@ bool FileParser::compare( Word const a , Word const b )
 }
 uint FileParser::getFileNamePosition( std::string &fullname )
 {
-	uint l = fullname.size();
-	for( uint i = l - 1; i >= 0; --i )
-		if( fullname.c_str()[ i ] == '/' ) return i + 1;
+	int l = fullname.size();
+	char const *str_ptr = fullname.c_str();
+	for( int i = l - 1; i >= 0; --i )
+	{
+		if( str_ptr[ i ] == '/' )
+		{
+			return i + 1;
+		}
+	}
 	return 0;
 }

@@ -58,6 +58,7 @@ public:
 	f3 _up;
 	bool _auto_height;
 	mutable int selectid = 0;
+	int animset_id = -1;
 	mutable f3 _size;
 	mutable AnimationMixer _animstat;
 };

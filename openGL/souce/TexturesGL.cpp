@@ -53,7 +53,11 @@ void TextureHolderGL::init( std::unique_ptr< Image[] > &&imgs , int count )
 }
 void TextureHolderGL::init()
 {
-	if( !_imgs ) return;
+	if( !_imgs )
+	{
+		_texture_array_pointer = 0;
+		return;
+	}
 	if( isInited() || !_count ) return;
 	setInited( true );
 	auto pow2 = []( int n )

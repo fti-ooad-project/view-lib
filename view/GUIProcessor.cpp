@@ -1,5 +1,6 @@
 #include <view\GUIProcessor.h>
-void GUIProcessor::process( GUILayout const *layout , MouseStates const *states )
+#include <SDL2/SDL.h>
+void GUIProcessor::process( GUILayout const *layout , MouseStates const &mousestates , KeyStates const &keystates )
 {
 	static auto isin = []( f2 const &p , f2 const &c , f2 const &s )
 	{
@@ -10,18 +11,47 @@ void GUIProcessor::process( GUILayout const *layout , MouseStates const *states 
 			return true;
 		return false;
 	};
-	for( auto &i : layout->getElemVec() )
+	auto &ev = layout->getElemVec();
+	bool elem_clicked = false;
+	bool click = !mousestates.__cur_states[ 0 ] && mousestates.__last_states[ 0 ];
+	ito( ev.size() )
 	{
-		if( isin( states->__cur_pos , i->_calculated_pos , i->_calculated_size ) )
+		if( isin( mousestates.__cur_pos , ev[ i ]->_calculated_pos , ev[ i ]->_calculated_size ) )
 		{
-			if( states->__cur_states[ 0 ] )
-				i->_status = 2;
+			if( mousestates.__cur_states[ 0 ] )
+				ev[ i ]->_status = 2;
 			else
-				i->_status = 1;
-			if( !states->__cur_states[ 0 ] && states->__last_states[ 0 ] )
-				if( i->_onClick )
-					i->_onClick();
+				ev[ i ]->_status = 1;
+			if( click )
+			{
+				_focused_elem = i;
+				elem_clicked = true;
+				if( ev[ i ]->_onClick )
+				{
+					ev[ i ]->_onClick();
+				}
+			}
 		} else
-			i->_status = 0;
+		{
+			ev[ i ]->_status = 0;
+		}
+	}
+	if( click && !elem_clicked )
+	{
+		_focused_elem = -1;
+	}
+	if( _focused_elem > 0 )
+	{
+		ev[ _focused_elem ]->_status = 2;
+		ito( MAX_KEY )
+		{
+			if( keystates.__cur_states[ i ] && !keystates.__last_states[ i ] )
+			{
+				if( ev[ _focused_elem ]->_onKeyPressWhenFocused )
+				{
+					ev[ _focused_elem ]->_onKeyPressWhenFocused( SDL_GetKeyFromScancode( ( SDL_Scancode )i ) );
+				}
+			}
+		}
 	}
 }

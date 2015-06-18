@@ -28,17 +28,17 @@ Eventer::Eventer()
 	ito( 2 )
 		_mwheel[ i ] = 0.0f;
 }
-void Eventer::addMouseFunc( MouseFunc func )
+void Eventer::setMouseFunc( MouseFunc func )
 {
-	_mouse_func.push_back( func );
+	_mouse_func = func;
 }
-void Eventer::addKeyFunc( KeyFunc func )
+void Eventer::setKeyFunc( KeyFunc func )
 {
-	_key_func.push_back( func );
+	_key_func = func;
 }
-void Eventer::addTimeFunc( TimeFunc func )
+void Eventer::setTimeFunc( TimeFunc func )
 {
-	_time_func.push_back( func );
+	_time_func = func;
 }
 void Eventer::update( const keystate *in_keys , const keystate *in_mous , const f2 *mp , float mwheel )
 {
@@ -72,22 +72,27 @@ void Eventer::run()
 			updateTime();
 			KeyStates ks{ __key_state[ _cur[ 0 ] ] , __key_state[ _last[ 0 ] ] };
 			MouseStates ms{ __mouse_state[ _cur[ 1 ] ] , __mouse_state[ _last[ 1 ] ] , __mouse_pos[ _cur[ 2 ] ] , __mouse_pos[ _last[ 2 ] ] , _mwheel[ _cur[ 2 ] ] , _mwheel[ _last[ 2 ] ] };
-			for( MouseFunc i : _mouse_func )
-				i( ms , _dt );
-			for( KeyFunc i : _key_func )
-				i( ks , _dt );
-			for( TimeFunc i : _time_func )
-				i( _dt );
+			if( _mouse_func )
+				_mouse_func( ms , _dt );
+			if( _key_func )
+				_key_func( ks , _dt );
+			if( _time_func )
+				_time_func( _dt );
+			if( _guilayout )
+			{
+				GUIProcessor::process( _guilayout , ms , ks );
+			}
 			_udated = false;
 		}
-		//sleep( 0x10 );
+		sleep( 0x10 );
 	}
+}
+void Eventer::setGuiLayout( GUILayout const *inguil )
+{
+	_guilayout = inguil;
 }
 void Eventer::release()
 {
-	_key_func.clear();
-	_mouse_func.clear();
-	_time_func.clear();
 }
 Eventer::~Eventer()
 {

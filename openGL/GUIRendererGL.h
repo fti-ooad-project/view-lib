@@ -18,7 +18,7 @@ public:
 		if( isInited() ) return;
 		setInited( true );
 		uint vbo , ibo;
-		static constexpr float quad[9][20] =
+		static const float quad[9][20] =
 		{
 			{ -1.0f , -1.0f , 0.0f , 1.0f , 1.0f ,
 			1.0f , -1.0f , 0.0f , 1.0f , 1.0f ,
@@ -57,7 +57,7 @@ public:
 			1.0f , 1.0f , 0.0f , 1.0f , 1.0f ,
 			-1.0f , 1.0f , 0.0f , 0.0f , 1.0f }
 		};
-		static constexpr ushort indx[] =
+		static const ushort indx[] =
 		{
 			0 , 1 , 2 , 0 , 2 , 3
 		};
@@ -197,10 +197,16 @@ public:
 	}
 	std::unique_ptr< Image[] > renderText( std::string text )
 	{
+		if( text.size() == 0 )
+			text = "_";
 		SDL_Surface *srf = drawtext( text );
 		/*IMG_Init( IMG_INIT_JPG );
 		SDL_SaveBMP( srf , "out.bmp" );
 		IMG_Quit();*/
+		if( !srf )
+		{
+			return std::unique_ptr< Image[] >( nullptr );
+		}
 		uint bpp = srf->format->BytesPerPixel;
 		//LOG << bpp << " " << srf->w << " " << srf->h << "\n";
 		std::unique_ptr< char[] > data( new char[srf->w * srf->h * bpp] );

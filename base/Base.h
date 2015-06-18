@@ -3,6 +3,7 @@
 //#include <list>
 //#include "vector"
 #include <time.h>
+#include <functional>
 //#include <functional>
 #include "../linalg/vec.h"
 #include "../linalg/mat.h"
@@ -21,6 +22,22 @@ struct Size
 	uint _w , _h;
 	Size(uint w = 0, uint h = 0);
 	Size(const Size &size);
+};
+typedef bool keystate;
+struct	KeyStates
+{
+	const keystate * __cur_states;
+	const keystate * __last_states;
+	KeyStates( const keystate * , const keystate * );
+};
+struct	MouseStates
+{
+	const keystate *__cur_states;
+	const keystate *__last_states;
+	const f2 __cur_pos;
+	const f2 __last_pos;
+	float _mwheel , _mwheel_last;
+	MouseStates( const keystate * , const keystate * , const f2 & , const f2 & , float , float );
 };
 /*class Log
 {

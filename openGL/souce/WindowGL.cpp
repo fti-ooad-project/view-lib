@@ -116,6 +116,17 @@ void WindowGL::run()
 		_func( _screen_width , _screen_height );
 		updateTime();
 		SDL_GL_SwapWindow( mainwindow );
+		//if( _dt < 0.0016f )
+		static float fps_delay = 1.0f;
+		fps_delay -= _dt;
+		if( fps_delay < 0.0f )
+		{
+			LOG << 1.0f / _dt << "\n";
+			fps_delay = 1.0f;
+		}
+		{
+			//sleep( 0x10 );
+		}
 	}
 exit:
 	_relf();

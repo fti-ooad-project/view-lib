@@ -1,6 +1,5 @@
 #pragma once
 #include <base/Base.h>
-#include <base/Eventer.h>
 class GUIElem
 {
 public:
@@ -22,8 +21,9 @@ public:
 	int _status;
 	bool _visible;
 	std::function< void() > _onClick;
-	std::function< void( f2 const & ) > _onDrag;
-	std::vector< std::shared_ptr< GUIElem > > _child;
+	std::function< void( int ) > _onKeyPressWhenFocused;
+	//std::function< void( f2 const & ) > _onDrag;
+	//std::vector< std::shared_ptr< GUIElem > > _child;
 };
 class GUILayout
 {
