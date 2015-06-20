@@ -1,6 +1,6 @@
 #ifndef RPASSGL_H
 #define RPASSGL_H
-#include <view\PassDesc.h>
+#include <view/PassDesc.h>
 class DrawPassGL : public Initable
 {
 private:

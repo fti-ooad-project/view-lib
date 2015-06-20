@@ -1,4 +1,4 @@
-#include <linalg\vec.h>
+#include <linalg/vec.h>
 /*inline float wrap(float x, float min, float max)
 {
 	if (x > max) return max;

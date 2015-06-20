@@ -1,5 +1,5 @@
-#include <openGL\DrawableGL.h>
-#include <openGL\GLincludes.h>
+#include <openGL/DrawableGL.h>
+#include <openGL/GLincludes.h>
 bool PolyMeshGL::isInstanced() const
 {
 	return bool( _instanced_buf );

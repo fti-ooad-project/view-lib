@@ -1,5 +1,5 @@
-#include <openGL\Blurer.h>
-#include <openGL\GLincludes.h>
+#include <openGL/Blurer.h>
+#include <openGL/GLincludes.h>
 DrawPassGL const &Blurer::process( uint buffid , float radius )
 {
 	_process_prog.bind();

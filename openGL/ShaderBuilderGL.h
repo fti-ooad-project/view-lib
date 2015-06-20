@@ -1,7 +1,7 @@
 #pragma once
-#include <view\ShaderBuilder.h>
-#include <openGL\GLincludes.h>
-#include <openGL\ViewModelsGL.h>
+#include <view/ShaderBuilder.h>
+#include <openGL/GLincludes.h>
+#include <openGL/ViewModelsGL.h>
 class ShaderBaseGL : public ShaderBase
 {
 private:

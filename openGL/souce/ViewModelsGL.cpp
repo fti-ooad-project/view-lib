@@ -1,5 +1,5 @@
-#include <openGL\ViewModelsGL.h>
-#include <openGL\GLincludes.h>
+#include <openGL/ViewModelsGL.h>
+#include <openGL/GLincludes.h>
 void GraphicProgrammGL::init( std::string frag_file , std::string vert_file , std::string geom_file , std::string tess_file , std::string tessest_file )
 {
 	std::string fsrc = FileParser::genParsed( frag_file );

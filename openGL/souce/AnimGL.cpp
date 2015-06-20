@@ -1,5 +1,5 @@
-#include <openGL\GLincludes.h>
-#include <openGL\AnimGL.h>
+#include <openGL/GLincludes.h>
+#include <openGL/AnimGL.h>
 uint BoneAnimInTexHolderGL::getCount() const
 {
 	return _count;

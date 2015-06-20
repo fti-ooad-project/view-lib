@@ -1,11 +1,11 @@
 #ifndef GIRENDERERGL_H
 #define GIRENDERERGL_H
-#include <openGL\GLincludes.h>
+#include <openGL/GLincludes.h>
 #include <base/Base.h>
-#include <openGL\TexturesGL.h>
-#include <base\Fileloader.h>
-#include <openGL\ViewModelsGL.h>
-#include <openGL\DrawableGL.h>
+#include <openGL/TexturesGL.h>
+#include <base/Fileloader.h>
+#include <openGL/ViewModelsGL.h>
+#include <openGL/DrawableGL.h>
 #include "SDL2/SDL_ttf.h"
 class PanelDrawler : public Initable
 {

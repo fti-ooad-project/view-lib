@@ -3,7 +3,7 @@
 #include <cstring>
 #include <view/Textures.h>
 #include <view/Drawable.h>
-#include <view\Anim.h>
+#include <view/Anim.h>
 #include <string>
 #include <stdexcept>
 #include <memory>

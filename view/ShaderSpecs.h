@@ -1,6 +1,6 @@
 #ifndef SHADERSPECS_H
 #define SHADERSPECS_H
-#include <base\Base.h>
+#include <base/Base.h>
 struct RShaderInTypes
 {
 	static const int vec1 = 0 , vec2 = 1 , vec3 = 2 , ivec1 = 3 , mat4 = 4 , tex = 5 , cubemap = 6 , vec4 = 7 , none = -1;
@@ -58,8 +58,8 @@ struct RTuple
 		}
 		c = 0;
 	}
-};*/
-/*class RGraphicProgramm : public RInitable
+};
+class RGraphicProgramm : public RInitable
 {
 public:
 	virtual void bind( RShaderInput & ) = 0;

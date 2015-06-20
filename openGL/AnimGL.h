@@ -1,8 +1,8 @@
 #ifndef RANIMGL_H
 #define RANIMGL_H
-#include <view\Anim.h>
-#include <view\ViewModels.h>
-#include <base\Base.h>
+#include <view/Anim.h>
+#include <view/ViewModels.h>
+#include <base/Base.h>
 class BoneAnimInTexHolderGL : public Initable
 {
 public:

@@ -1,5 +1,5 @@
-#include <openGL\PassGL.h>
-#include <openGL\GLincludes.h>
+#include <openGL/PassGL.h>
+#include <openGL/GLincludes.h>
 void DrawPassGL::init( const PassDesc &desc )
 {
 	if( isInited() ) return;

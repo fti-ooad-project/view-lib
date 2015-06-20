@@ -1,6 +1,6 @@
 #ifndef RTEXTURESGL_H
 #define RTEXTURESGL_H
-#include <view\Textures.h>
+#include <view/Textures.h>
 #include <algorithm>
 class TextureHolderGL : public Initable
 {

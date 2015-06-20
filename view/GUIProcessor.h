@@ -1,6 +1,6 @@
 #pragma once
-#include <base\Base.h>
-#include <view\GUILayot.h>
+#include <base/Base.h>
+#include <view/GUILayot.h>
 class GUIProcessor
 {
 private:

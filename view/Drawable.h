@@ -1,8 +1,8 @@
 #ifndef __RDRAWABLES_H__
 #define __RDRAWABLES_H__
-#include <base\Base.h>
-#include <view\Textures.h>
-#include <view\Anim.h>
+#include <base/Base.h>
+#include <view/Textures.h>
+#include <view/Anim.h>
 #include <memory>
 #include <list>
 enum DrawableType

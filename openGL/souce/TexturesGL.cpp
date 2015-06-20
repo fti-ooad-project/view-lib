@@ -1,6 +1,6 @@
-#include <openGL\TexturesGL.h>
-#include <openGL\GLincludes.h>
-#include <view\PassDesc.h>
+#include <openGL/TexturesGL.h>
+#include <openGL/GLincludes.h>
+#include <view/PassDesc.h>
 void TextureHolderGL::bind( uint tid , uint uid ) const
 {
 	glActiveTexture( GL_TEXTURE0 + tid );

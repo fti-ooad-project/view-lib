@@ -1,7 +1,7 @@
 #pragma once
-#include <openGL\PassGL.h>
-#include <openGL\ViewModelsGL.h>
-#include <openGL\DrawableGL.h>
+#include <openGL/PassGL.h>
+#include <openGL/ViewModelsGL.h>
+#include <openGL/DrawableGL.h>
 #include <base/Base.h>
 class Blurer : public Initable
 {
