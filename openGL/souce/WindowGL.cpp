@@ -111,7 +111,6 @@ void WindowGL::run()
 			break;
 			}
 		}
-		_eventer->update( this->__key_state , this->__mouse_state , &this->__mouse_pos , _mwheel );
 		SDL_GetWindowSize( mainwindow , &_screen_width , &_screen_height );
 		_func( _screen_width , _screen_height );
 		updateTime();
@@ -125,7 +124,8 @@ void WindowGL::run()
 			fps_delay = 1.0f;
 		}
 		{
-			//sleep( 0x10 );
+			_eventer->update( this->__key_state , this->__mouse_state , &this->__mouse_pos , _mwheel );
+			sleep( 0x3 );
 		}
 	}
 exit:

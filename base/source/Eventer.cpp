@@ -84,7 +84,7 @@ void Eventer::run()
 			}
 			_udated = false;
 		}
-		sleep( 0x10 );
+		sleep( 0x3 );
 	}
 }
 void Eventer::setGuiLayout( GUILayout const *inguil )

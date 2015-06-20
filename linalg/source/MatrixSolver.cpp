@@ -13,14 +13,13 @@ typedef double FType;
 FType *mat;
 int N;
 size_t mat_size;
-FType LUDecomposite( FType const *inmat , int N , FType *outQ )
+FType LUDecomposite( FType const *inmat , const int N , FType *outQ )
 {
 	FType det = 1.0f;
 	FType *transposed = outQ + ::N * ::N;
 	int *P = ( int* )( outQ + ::N * ::N * 2 );
 	for( int j = 0; j < N; j++ )
 		P[ j ] = j;
-
 	for( int j = 0; j < N; j++ )
 	{
 		FType qjj = getInElem( j , j );

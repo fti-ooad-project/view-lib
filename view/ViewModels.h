@@ -40,12 +40,13 @@ struct AnimationMixer
 	struct TimeEvent
 	{
 		bool _active = false;
-		std::function< void( void ) > _func;
+		std::function< void() > _func;
 		float _switch_time;
-		void check( float );
+		bool check( float );
 	} _event;
 	float _speed = 1.0f;
 	float _mixspeed = 1.0f;
+	bool _event_shot = false;
 	void update( const float );
 	void change( const int , const float , TimeEvent const &event );
 };
@@ -56,6 +57,7 @@ public:
 	f3 _pos;
 	f3 _look;
 	f3 _up;
+	f3 _left;
 	bool _auto_height;
 	mutable int selectid = 0;
 	int animset_id = -1;
