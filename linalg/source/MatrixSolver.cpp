@@ -1,6 +1,8 @@
-#include <linalg\MatrixSolver.h>
+#include <linalg/MatrixSolver.h>
 #include <iostream>
 #include <thread>
+#include <cmath>
+
 typedef double FType;
 #define allocFTypeMat( name , size ) \
 		double *name = ( FType* )malloc( size );\
@@ -8,7 +10,6 @@ typedef double FType;
 			memset( name , 0 , size );\
 		}
 #define getElem( mat , i , j ) mat[ i * N + j ]
-#define getElemU( mat , i , j ) mat[ ( N - j ) * N - 1 - i ]
 #define getInElem( i , j ) inmat[ P[ i ] * N + j ]
 /*returns determinant of input matrix:*/
 FType *mat;
@@ -17,26 +18,23 @@ size_t mat_size;
 FType LUDecomposite( FType const *inmat , const int N , FType *outQ )
 {
 	FType det = 1.0f;
-	//FType *transposed = outQ + ::N * ::N;
-	int *P = ( int* )( outQ + ::N * ::N );
-	//memset( outQ , 0 , N * N * sizeof( double ) );
-	memset( P , 0 , N * sizeof( int ) );
-	//for( int j = 0; j < N; j++ )
-	//	P[ j ] = j;
+	FType *transposed = outQ + ::N * ::N;
+	int *P = ( int* )( outQ + ::N * ::N * 2 );
+	for( int j = 0; j < N; j++ )
+		P[ j ] = j;
 	for( int j = 0; j < N; j++ )
 	{
-		if( !P[ j ] && j )
-			P[ j ] = j;
 		FType qjj = getInElem( j , j );
 		for( int n = 0; n < j; n++ )
 		{
-			qjj -= getElem( outQ , j , n ) * getElemU( outQ , n , j );
+			qjj -= getElem( outQ , j , n ) * getElem( transposed , j , n );
 		}
 		getElem( outQ , j , j ) = qjj;
+		getElem( transposed , j , j ) = qjj;
 		det *= qjj;
-		if( fabs( qjj ) < 1e-100 )
+		if( fabs( qjj ) < 0.000001f )
 		{
-			std::cout << "zero element q" << j << "'" << j << "\n";
+			std::cout << "zero element qjj!!!\n";
 			int t = P[ j ];
 			P[ j ] = P[ j + 1 ];
 			P[ j + 1 ] = t;
@@ -49,21 +47,13 @@ FType LUDecomposite( FType const *inmat , const int N , FType *outQ )
 			FType uji = getInElem( j , i );
 			for( int n = 0; n < j; n++ )
 			{
-				lij -= getElem( outQ , i , n ) * getElemU( outQ , n , j );
-				uji -= getElemU( outQ , n , i ) * getElem( outQ , j , n );
+				lij -= getElem( outQ , i , n ) * getElem( transposed , j , n );
+				uji -= getElem( transposed , i , n ) * getElem( outQ , j , n );
 			}
 			getElem( outQ , i , j ) = lij;
-			getElemU( outQ , j , i ) = uji / qjj;
-		}
-		//testNative();
-	}
-	for( int i = 0; i < N; i++ )
-	{
-		for( int j = i + 1; j < N; j++ )
-		{
-			double temp = getElem( outQ , i , j );
-			getElem( outQ , i , j ) = getElemU( outQ , i , j );
-			getElemU( outQ , i , j ) = temp;
+			getElem( outQ , j , i ) = uji / qjj;
+			getElem( transposed , j , i ) = lij;
+			getElem( transposed , i , j ) = uji / qjj;
 		}
 	}
 	return det;
@@ -76,14 +66,13 @@ double calcDet( FType const *inmat , int N )
 		init( N );
 	}
 	FType det = LUDecomposite( inmat , N , ::mat );
-	//testNative();
 	return det;
 }
 void init( int N )
 {
 	::N = N;
 	::mat_size = N * N * sizeof( FType );
-	::mat = ( double* )malloc( ( N * N + N ) * sizeof( FType ) );
+	::mat = ( double* )malloc( ( N * N * 2 + N ) * sizeof( FType ) );
 	//memset( ::mat , 0 , ::mat_size * 2 );
 }
 void release()
@@ -101,6 +90,14 @@ void testNative()
 		std::cout << "\n";
 	}
 	std::cout << "\n";
+	for( int i = 0; i < N; i++ )
+	{
+		for( int j = 0; j < N; j++ )
+		{
+			std::cout << ::mat[ N * N + i * N + j ] << " ";
+		}
+		std::cout << "\n";
+	}
 }
 /*for( int j = 0; j < N; j++ )
 {

@@ -7,7 +7,7 @@
 #include <string>
 #include <iostream>
 #include <base/FileParser.h>
-#include <base/Fileloader.h>
+#include <base/FileLoader.h>
 #include <base/Base.h>
 struct RAnimPref
 {

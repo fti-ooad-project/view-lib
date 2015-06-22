@@ -2,7 +2,7 @@
 #define __RFileParser_H__
 #include <stdio.h>
 #include <string>
-#include <base/Fileloader.h>
+#include <base/FileLoader.h>
 typedef std::string Word;
 #define RWORDS_COUNT 1
 const Word res_word[RWORDS_COUNT] = { "$include" };

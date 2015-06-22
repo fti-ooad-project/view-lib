@@ -1,6 +1,6 @@
 #pragma once
-#include <base\Base.h>
-#include <openGL\ViewModelsGL.h>
+#include <base/Base.h>
+#include <openGL/ViewModelsGL.h>
 #include <memory>
 class GraphDrawler : public Initable
 {

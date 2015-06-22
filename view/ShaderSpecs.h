@@ -58,8 +58,8 @@ struct RTuple
 		}
 		c = 0;
 	}
-};
-class RGraphicProgramm : public RInitable
+};*/
+/*class RGraphicProgramm : public RInitable
 {
 public:
 	virtual void bind( RShaderInput & ) = 0;

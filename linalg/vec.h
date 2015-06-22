@@ -318,7 +318,7 @@ struct vec : public accessor< N , T >
 		}
 		vec< 2 , T > xy() const
 		{
-			return vec< 2 , T >( x() , y() );
+			return vec< 2 , T >( this->x() , this->y() );
 		}
 };
 template< int N , typename T >

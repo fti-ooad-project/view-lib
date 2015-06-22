@@ -1,5 +1,5 @@
-#include <openGL\SoundPlayer.h>
-#include <SDL2\SDL_audio.h>
+#include <openGL/SoundPlayer.h>
+#include <SDL2/SDL_audio.h>
 #include <vector>
 class Sound
 {

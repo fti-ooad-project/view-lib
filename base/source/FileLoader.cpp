@@ -1,4 +1,4 @@
-#include <base/Fileloader.h>
+#include <base/FileLoader.h>
 #include <view/Vertex.h>
 #include <view/ShaderSpecs.h>
 std::unique_ptr< Image[] > FileLoader::loadImage( std::string filename )

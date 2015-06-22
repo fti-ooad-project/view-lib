@@ -1,5 +1,5 @@
-#include <openGL\PointDrawler.h>
-#include <openGL\GLincludes.h>
+#include <openGL/PointDrawler.h>
+#include <openGL/GLincludes.h>
 static const char VERTEX_SHADER[] =
 "#version 440\n"
 "layout(location = 0 ) in vec2 pos;\n"

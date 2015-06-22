@@ -3,7 +3,7 @@
 #include <openGL/GLincludes.h>
 #include <base/Base.h>
 #include <openGL/TexturesGL.h>
-#include <base/Fileloader.h>
+#include <base/FileLoader.h>
 #include <openGL/ViewModelsGL.h>
 #include <openGL/DrawableGL.h>
 #include "SDL2/SDL_ttf.h"

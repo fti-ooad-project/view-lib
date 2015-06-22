@@ -1,5 +1,5 @@
-#ifndef __RFileloader_H__
-#define __RFileloader_H__
+#ifndef __RFileLoader_H__
+#define __RFileLoader_H__
 #include <cstring>
 #include <view/Textures.h>
 #include <view/Drawable.h>
