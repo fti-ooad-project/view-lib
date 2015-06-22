@@ -165,7 +165,7 @@ class TextRenderer : public Initable
 {
 private:
 	TTF_Font *_font;
-	TTF_Font *loadfont( char *file , int ptsize )
+	TTF_Font *loadfont( const char *file , int ptsize )
 	{
 		TTF_Font* tmpfont;
 		tmpfont = TTF_OpenFont( file , ptsize );

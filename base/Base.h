@@ -9,14 +9,31 @@
 #include "../linalg/mat.h"
 #include <memory>
 //#include <SDL2/SDL.h>
+
+#ifndef MARK
 #define MARK printf( "mark\n" );
+#endif
+
 typedef unsigned int uint;
 typedef unsigned short ushort;
 typedef unsigned char uchar;
+
+#ifndef MAX_KEY
 #define MAX_KEY 0x100
+#endif
+
+#ifndef MIN
 #define MIN( x , y ) x < y ? x : y
+#endif
+
+#ifndef ifor
 #define ifor( i , x , y ) for( int i = x; i < y; ++i )
+#endif
+
+#ifndef ito
 #define ito( y ) ifor( i , 0 , y )
+#endif
+
 struct Size
 {
 	uint _w , _h;
